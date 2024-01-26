@@ -1,4 +1,4 @@
-ackage com.example.shiftmanager;
+package com.example.shiftmanager;
 
 import androidx.appcompat.app.AppCompatActivity;
 

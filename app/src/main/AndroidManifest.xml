@@ -16,6 +16,9 @@
             android:name=".MainCurrWork"
             android:exported="false" />
         <activity
+            android:name=".MainShifts"
+            android:exported="false" />
+        <activity
             android:name=".MainPreWork"
             android:exported="false" />
         <activity

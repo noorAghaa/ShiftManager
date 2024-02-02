@@ -15,6 +15,7 @@ public class MainPreWork extends AppCompatActivity {
         setContentView(R.layout.activity_main_pre_work);
 
         Button start_button = findViewById(R.id.start_button);
+        Button shift_button = findViewById(R.id.shift_button);
         start_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -23,5 +24,12 @@ public class MainPreWork extends AppCompatActivity {
             }
         });
 
+        shift_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent curr_activity = new Intent(MainPreWork.this, MainShifts.class);
+                startActivity(curr_activity);
+            }
+        });
     }
 }

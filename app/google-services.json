@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "166621267210",
+    "firebase_url": "https://shiftmanagerapp-f65da-default-rtdb.firebaseio.com",
+    "project_id": "shiftmanagerapp-f65da",
+    "storage_bucket": "shiftmanagerapp-f65da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:166621267210:android:aa603a1c4c74d1069ba6f3",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "166621267210-elpnj540bbhi66gto5d1tnd8j6i9iso9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myapplication",
+            "certificate_hash": "538bcdc7d759370fca54006818c1dbcfe8193356"
+          }
+        },
+        {
+          "client_id": "166621267210-teehfmr4u2fdblaqqp63vm22fk6k88qd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlbfLvjVkwGpFJuWQEsMkmJYlYiyI8ekA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "166621267210-teehfmr4u2fdblaqqp63vm22fk6k88qd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

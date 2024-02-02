@@ -33,9 +33,6 @@ public class MainPreWork extends AppCompatActivity {
             }
         });
 
-
-
-
         workmenu_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

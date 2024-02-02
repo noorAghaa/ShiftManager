@@ -42,9 +42,9 @@ public class MainCurrWork extends AppCompatActivity {
             }
             // TODO: Send startTime and endTime to the database
 
-            Intent backToPreWork = new Intent(getApplicationContext(), MainPreWork.class);
-            backToPreWork.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(backToPreWork);
+            Intent goToShifts = new Intent(MainCurrWork.this, MainShifts.class);
+            goToShifts.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(goToShifts);
         });
     }
 

@@ -28,8 +28,8 @@ public class MainPreWork extends AppCompatActivity {
         shift_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent curr_activity = new Intent(MainPreWork.this, MainShifts.class);
-//                startActivity(curr_activity);
+                Intent curr_activity = new Intent(MainPreWork.this, MainShifts.class);
+                startActivity(curr_activity);
             }
         });
 

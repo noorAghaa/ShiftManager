@@ -74,12 +74,12 @@ public class MainActivity extends AppCompatActivity {
                     int type = customer.getAccount_type();
                     if(type==0) {
                         Toast.makeText(MainActivity.this,"Hello Employee",Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivity.this, EmployeeActivity.class);
+                        Intent intent = new Intent(MainActivity.this, MainPreWork.class);
                         startActivity(intent);
                         finish();
                     }else{
                         Toast.makeText(MainActivity.this,"Hello Manager",Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivity.this, ManagerActivity.class);
+                        Intent intent = new Intent(MainActivity.this, MainPreWork.class);
                         startActivity(intent);
                         finish();
                     }

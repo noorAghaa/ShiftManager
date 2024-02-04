@@ -36,8 +36,8 @@ public class MainPreWork extends AppCompatActivity {
         workmenu_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent curr_activity = new Intent(MainPreWork.this, MainWorkMenu.class);
-//                startActivity(curr_activity);
+                Intent curr_activity = new Intent(MainPreWork.this, MainWorkMenu.class);
+                startActivity(curr_activity);
             }
         });
     }

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ public class SignupActivity extends AppCompatActivity {
     TextView txtV_button_back;
     Button signupButton;
     ImageButton backButton;
+    Switch accountTypeSwitch;
 
     private Database database;
 
@@ -44,6 +46,7 @@ public class SignupActivity extends AppCompatActivity {
         backButton = findViewById(R.id.customBackButton);
         phoneNumber = findViewById(R.id.editTextPhoneNumber);
         Id_Number = findViewById(R.id.Id_Number);
+        accountTypeSwitch = findViewById(R.id.switchAccountType);
     }
 
 
@@ -86,6 +89,8 @@ public class SignupActivity extends AppCompatActivity {
                 employee.setPhoneNumber(phoneNumber.getText().toString());
                 employee.setPassword(signupPassword.getText().toString());
 
+                int accountType = accountTypeSwitch.isChecked() ? 1 : 0;
+                employee.setAccount_type(accountType);
 
                 String password = signupPassword.getText().toString().trim();
                 String id = Id_Number.getText().toString().trim();

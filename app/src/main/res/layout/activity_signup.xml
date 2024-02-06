@@ -117,6 +117,15 @@
                 android:drawablePadding="8dp"
                 android:textColor="@color/black"/>
 
+            <Switch
+                android:id="@+id/switchAccountType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textOff="Employee"
+                android:textOn="Proprietor/Manager"
+                android:text="Manager Account?"/>
+
             <Button
                 android:id="@+id/signupButton"
                 android:layout_width="match_parent"
@@ -140,6 +149,7 @@
                 android:text="@string/already_an_user_login"
                 android:textColor="@color/purple"
                 android:textSize="18sp"/>
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

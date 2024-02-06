@@ -29,7 +29,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Shift shift = shiftList.get(position);
         holder.dayTextView.setText(shift.getDay());
-        holder.dateTextView.setText(shift.getDate());
+        holder.dateTextView.setText(String.valueOf(shift.getDate()));
         holder.durationTextView.setText(shift.getDuration());
     }
 

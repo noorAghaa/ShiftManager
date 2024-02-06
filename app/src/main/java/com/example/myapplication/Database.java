@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class Database {
 
     public static final String USERS_TABLE = "Employees";
+    public static final String SHIFTS_TABLE = "Shifts"; // Define shifts collection name
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -165,5 +167,17 @@ public class Database {
     public void logout() {
         this.mAuth.signOut();
     }
+
+    public void saveShiftData(Shift shift) {
+        // Assuming you already have the user's ID in the shift object
+        db.collection(SHIFTS_TABLE).add(shift)
+                .addOnSuccessListener(documentReference -> {
+                    // success
+                })
+                .addOnFailureListener(e -> {
+                    // failure
+                });
+    }
+
 
 }

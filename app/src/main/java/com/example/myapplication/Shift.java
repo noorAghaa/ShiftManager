@@ -1,29 +1,25 @@
 package com.example.myapplication;
 
+import com.google.firebase.Timestamp;
 import java.util.Date;
 
-
 public class Shift {
-    private final String day;
-    private final Date date; // Use java.util.Date
-    private final String duration;
+    private String day;
+    private Date date; // Keeping it as Date
+    private String duration;
+    private String userId; // Add user ID field
 
-    public Shift(String day, String dateString, String duration) {
+    // Adjusted constructor to include userId
+    public Shift(String day, Date date, String duration, String userId) {
         this.day = day;
+        this.date = date;
         this.duration = duration;
-        this.date = DateUtil.parseDate(dateString); // Use DateUtil for parsing
+        this.userId = userId; // Set user ID
     }
 
-    // Getters
-    public String getDay() {
-        return day;
-    }
-
-    public String getDate() {
-        return DateUtil.formatDate(date); // Use DateUtil for formatting
-    }
-
-    public String getDuration() {
-        return duration;
-    }
+    // Getters (and setters if necessary)
+    public String getDay() { return day; }
+    public Date getDate() { return date; }
+    public String getDuration() { return duration; }
+    public String getUserId() { return userId; } // Getter for userId
 }

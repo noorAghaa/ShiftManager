@@ -6,8 +6,13 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class MainCurrWork extends AppCompatActivity {
@@ -15,11 +20,14 @@ public class MainCurrWork extends AppCompatActivity {
     private String endTime;
     private Button startingButton;
     private Button endingButton;
+    private Database database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_curr_work);
+
+        database = new Database();
 
         startingButton = findViewById(R.id.starting_button);
         endingButton = findViewById(R.id.ending_button);
@@ -37,10 +45,18 @@ public class MainCurrWork extends AppCompatActivity {
         endingButton.setOnClickListener(view -> showTimePickerDialog(false));
 
         endShiftButton.setOnClickListener(view -> {
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             if(endTime.equals("-")) {
                 endTime = formatter.format(calendar.getTime());
             }
-            // TODO: Send startTime and endTime to the database
+            String day = new SimpleDateFormat("EEEE", Locale.getDefault()).format(calendar.getTime());
+            Date date = calendar.getTime();
+            String duration = startTime + " - " + endTime;
+            String userId = currentUser.getUid();
+
+            Shift shift = new Shift(day, date, duration, userId);
+            database.saveShiftData(shift); // Save shift with user reference
+
 
             Intent goToShifts = new Intent(MainCurrWork.this, MainShifts.class);
             goToShifts.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

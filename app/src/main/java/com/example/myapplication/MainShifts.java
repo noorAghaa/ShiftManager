@@ -27,7 +27,7 @@ public class MainShifts extends AppCompatActivity {
 
         setupRecyclerView();
         setupSpinner();
-        populateShifts();
+//        populateShifts();
     }
 
     private void setupRecyclerView() {
@@ -56,37 +56,37 @@ public class MainShifts extends AppCompatActivity {
         });
     }
 
-    private void populateShifts() {
-        // Initialize your shifts here
-        allShifts.add(new Shift("Monday", "03-01-2023", "8 hours"));
-        allShifts.add(new Shift("Tuesday", "10-01-2023", "9 hours"));
-        allShifts.add(new Shift("Tuesday", "10-02-2023", "12 hours"));
-        allShifts.add(new Shift("Tuesday", "10-03-2023", "15 hours"));
-        allShifts.add(new Shift("Tuesday", "10-04-2023", "20 hours"));
-        allShifts.add(new Shift("Tuesday", "10-05-2023", "24 hours"));
-        allShifts.add(new Shift("Tuesday", "10-06-2023", "22 hours"));
-        allShifts.add(new Shift("Tuesday", "10-07-2023", "6 hours"));
-        allShifts.add(new Shift("Tuesday", "10-08-2023", "3 hours"));
-        allShifts.add(new Shift("Tuesday", "10-09-2023", "7 hours"));
-        allShifts.add(new Shift("Tuesday", "10-10-2023", "1 hours"));
-        allShifts.add(new Shift("Tuesday", "10-11-2023", "10 hours"));
-        allShifts.add(new Shift("Tuesday", "10-12-2023", "46 hours"));
-        // Add more shifts as needed for testing
-
-        // Make displayedShifts a copy of allShifts
-        displayedShifts.clear(); // Clear it first to ensure it's empty before adding all items
-        displayedShifts.addAll(allShifts);
-
-        // If your adapter might have been initialized before this point,
-        // ensure the displayed list in the adapter is updated.
-        // This might not be necessary if populateShifts is only called in onCreate before setting the adapter.
-        adapter.updateData(displayedShifts);
-    }
+//    private void populateShifts() {
+//        // Initialize your shifts here
+//        allShifts.add(new Shift("Monday", "03-01-2023", "8 hours"));
+//        allShifts.add(new Shift("Tuesday", "10-01-2023", "9 hours"));
+//        allShifts.add(new Shift("Tuesday", "10-02-2023", "12 hours"));
+//        allShifts.add(new Shift("Tuesday", "10-03-2023", "15 hours"));
+//        allShifts.add(new Shift("Tuesday", "10-04-2023", "20 hours"));
+//        allShifts.add(new Shift("Tuesday", "10-05-2023", "24 hours"));
+//        allShifts.add(new Shift("Tuesday", "10-06-2023", "22 hours"));
+//        allShifts.add(new Shift("Tuesday", "10-07-2023", "6 hours"));
+//        allShifts.add(new Shift("Tuesday", "10-08-2023", "3 hours"));
+//        allShifts.add(new Shift("Tuesday", "10-09-2023", "7 hours"));
+//        allShifts.add(new Shift("Tuesday", "10-10-2023", "1 hours"));
+//        allShifts.add(new Shift("Tuesday", "10-11-2023", "10 hours"));
+//        allShifts.add(new Shift("Tuesday", "10-12-2023", "46 hours"));
+//        // Add more shifts as needed for testing
+//
+//        // Make displayedShifts a copy of allShifts
+//        displayedShifts.clear(); // Clear it first to ensure it's empty before adding all items
+//        displayedShifts.addAll(allShifts);
+//
+//        // If your adapter might have been initialized before this point,
+//        // ensure the displayed list in the adapter is updated.
+//        // This might not be necessary if populateShifts is only called in onCreate before setting the adapter.
+//        adapter.updateData(displayedShifts);
+//    }
 
     private void filterShiftsByMonth(String selectedMonth) {
         List<Shift> filteredShifts = new ArrayList<>();
         for (Shift shift : allShifts) {
-            String dateString = shift.getDate(); // This is a string in "dd-MM-yyyy" format
+            String dateString = String.valueOf(shift.getDate()); // This is a string in "dd-MM-yyyy" format
             Date date = DateUtil.parseDate(dateString); // Convert the string to a Date object for comparison
             if (date != null) { // Check if the date conversion was successful
                 String monthName = DateUtil.getMonthName(date);

@@ -21,16 +21,16 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_main_shifts, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.shift_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Shift shift = shiftList.get(position);
-        holder.dayTextView.setText(shift.getDay());
-        holder.dateTextView.setText(String.valueOf(shift.getDate()));
-        holder.durationTextView.setText(shift.getDuration());
+        holder.dayTextView.setText(shift.getDay() + " - " + shift.getFormattedDay());
+        holder.startAndEndTextView.setText(shift.getDuration());
+        holder.durationTextView.setText(shift.calculateDuration()); // Use formatted date range
     }
 
     @Override
@@ -47,13 +47,13 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView dayTextView;
-        TextView dateTextView;
         TextView durationTextView;
+        TextView startAndEndTextView;
 
         public ViewHolder(View view) {
             super(view);
             dayTextView = view.findViewById(R.id.dayTextView);
-            dateTextView = view.findViewById(R.id.dateTextView);
+            startAndEndTextView = view.findViewById(R.id.startAndEndTextView);
             durationTextView = view.findViewById(R.id.durationTextView);
         }
     }

@@ -7,7 +7,7 @@ import java.util.Locale;
 
 public class DateUtil {
 
-    private static final SimpleDateFormat originalFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+    private static final SimpleDateFormat originalFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
     private static final SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM", Locale.getDefault());
 
     public static Date parseDate(String dateString) {

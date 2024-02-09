@@ -107,7 +107,7 @@ public class MainShifts extends AppCompatActivity {
         List<Shift> filteredShifts = new ArrayList<>();
         for (Shift shift : allShifts) {
             Calendar cal = Calendar.getInstance();
-            cal.setTime(shift.getDate());
+            cal.setTime(shift.getStart_date());
             int shiftYear = cal.get(Calendar.YEAR);
             int shiftMonth = cal.get(Calendar.MONTH) + 1; // Adjust for 1-based indexing
             if (shiftYear == year && shiftMonth == month) {

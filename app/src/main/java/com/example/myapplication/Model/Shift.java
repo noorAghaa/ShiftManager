@@ -9,7 +9,8 @@ import java.util.Locale;
 
 public class Shift {
     private String day;
-    private Date date; // Keeping it as Date
+    private Date start_date; // Keeping it as Date
+    private Date end_date;
     private String duration;
     private String userId; // Add user ID field
 
@@ -18,16 +19,17 @@ public class Shift {
     }
 
     // Adjusted constructor to include userId
-    public Shift(String day, Date date, String duration, String userId) {
+    public Shift(String day, Date start_date, String duration, String userId, Date end_date) {
         this.day = day;
-        this.date = date;
+        this.start_date = start_date;
+        this.end_date = end_date;
         this.duration = duration;
         this.userId = userId; // Set user ID
     }
 
     public String getFormattedDay() {
         try {
-            String[] parts = DateUtil.formatDate(date).split(" ");
+            String[] parts = DateUtil.formatDate(start_date).split(" ");
             return parts[2];// Extract day
         } catch (Exception e) {
             return "Date format error";
@@ -70,7 +72,9 @@ public class Shift {
 
     // Getters (and setters if necessary)
     public String getDay() { return day; }
-    public Date getDate() { return date; }
+    public Date getStart_date() { return start_date; }
     public String getDuration() { return duration; }
     public String getUserId() { return userId; } // Getter for userId
+
+    public Date getEnd_date() { return  end_date; }
 }

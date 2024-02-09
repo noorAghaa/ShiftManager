@@ -32,7 +32,7 @@ public class MainPreWork extends AppCompatActivity {
         fetchAndDisplayUserData(); // Fetch and display user data
 
         Button start_button = findViewById(R.id.start_button);
-        Button shift_button = findViewById(R.id.shift_button);
+        Button shifts_button = findViewById(R.id.shift_button);
         Button workmenu_button = findViewById(R.id.work_button);
         start_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,7 +42,7 @@ public class MainPreWork extends AppCompatActivity {
             }
         });
 
-        shift_button.setOnClickListener(new View.OnClickListener() {
+        shifts_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent curr_activity = new Intent(MainPreWork.this, MainShifts.class);

@@ -13,49 +13,49 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
-            android:name=".ExtraHoursActivity"
+            android:name=".View.ExtraHoursActivity"
             android:exported="false" />
         <activity
-            android:name=".TravelingExpensesActivity"
+            android:name=".View.TravelingExpensesActivity"
             android:exported="false" />
         <activity
-            android:name=".CalculateActivity"
+            android:name=".View.CalculateActivity"
             android:exported="false" />
         <activity
-            android:name=".SalaryActivity"
+            android:name=".View.SalaryActivity"
             android:exported="false" />
         <activity
-            android:name=".SickDaysActivity"
+            android:name=".View.SickDaysActivity"
             android:exported="false" />
         <activity
-            android:name=".BreaksActivity"
+            android:name=".View.BreaksActivity"
             android:exported="false" />
         <activity
-            android:name=".MainWorkMenu"
+            android:name=".View.MainWorkMenu"
             android:exported="false" />
         <activity
-            android:name=".MainCurrWork"
+            android:name=".View.MainCurrWork"
             android:exported="false" />
         <activity
-            android:name=".MainPreWork"
+            android:name=".View.MainPreWork"
             android:exported="false" />
         <activity
-            android:name=".ManagerActivity"
+            android:name=".View.ManagerActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupActivity"
+            android:name=".View.SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".ForgotPasswordActivity"
+            android:name=".View.ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".EmployeeActivity"
+            android:name=".View.EmployeeActivity"
             android:exported="false" />
         <activity
-            android:name=".MainShifts"
+            android:name=".View.MainShifts"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".View.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

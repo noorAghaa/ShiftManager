@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.View;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.myapplication.Controller.AuthCallBack;
+import com.example.myapplication.Model.Database;
+import com.example.myapplication.Model.User;
+import com.example.myapplication.R;
+import com.example.myapplication.Controller.UserCallBack;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,6 +12,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.Controller.AuthCallBack;
+import com.example.myapplication.Model.Database;
+import com.example.myapplication.Model.User;
+import com.example.myapplication.R;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 

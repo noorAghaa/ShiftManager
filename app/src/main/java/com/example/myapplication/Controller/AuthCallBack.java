@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Controller;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 

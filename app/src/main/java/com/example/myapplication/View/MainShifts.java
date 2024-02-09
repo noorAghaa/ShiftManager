@@ -1,10 +1,7 @@
-package com.example.myapplication;
+package com.example.myapplication.View;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -12,6 +9,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.myapplication.Model.Database;
+import com.example.myapplication.Model.Shift;
+import com.example.myapplication.R;
+import com.example.myapplication.Controller.ShiftAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.DateFormatSymbols;

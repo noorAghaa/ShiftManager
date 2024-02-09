@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".SickDaysActivity">
+    tools:context=".View.SickDaysActivity">
 
     <Button
         android:id="@+id/button_pick_sick_date"

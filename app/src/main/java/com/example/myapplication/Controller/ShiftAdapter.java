@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Controller;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.myapplication.Model.Shift;
+import com.example.myapplication.R;
 
 import java.util.List;
 

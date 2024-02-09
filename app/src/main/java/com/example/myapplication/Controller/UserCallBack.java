@@ -1,5 +1,6 @@
-package com.example.myapplication;
+package com.example.myapplication.Controller;
 
+import com.example.myapplication.Model.User;
 import com.google.android.gms.tasks.Task;
 
 public interface UserCallBack {

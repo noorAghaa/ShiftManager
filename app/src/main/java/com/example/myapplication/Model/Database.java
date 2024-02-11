@@ -1,5 +1,7 @@
 package com.example.myapplication.Model;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -17,7 +19,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -25,6 +29,8 @@ public class Database {
 
     public static final String USERS_TABLE = "Employees";
     public static final String SHIFTS_TABLE = "Shifts"; // Define shifts collection name
+    public static final String MANAGERS_TABLE = "Managers";
+
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -63,13 +69,32 @@ public class Database {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(getCurrentUser() != null){
-                            userData.setKeyOn(getCurrentUser().getUid());
+                            String userId = getCurrentUser().getUid();
+                            userData.setKeyOn(userId);
                             saveUserData(userData);
+
+                            // Check if the account is a manager account
+                            if (userData.getAccount_type() == 1) {
+                                // Add an entry for this manager in the Managers table with an empty list of employees
+                                addManagerWithNoEmployees(userId);
+                            }
+
+                            authCallBack.onCreateAccountComplete(true, "");
                         }else {
                             authCallBack.onCreateAccountComplete(false, task.getException().getMessage().toString());
                         }
                     }
                 });
+    }
+
+    private void addManagerWithNoEmployees(String managerId) {
+        // Create a new manager document with an empty list of employee IDs
+        Map<String, Object> managerData = new HashMap<>();
+        managerData.put("employeeIds", new ArrayList<String>());
+
+        db.collection(MANAGERS_TABLE).document(managerId).set(managerData)
+                .addOnSuccessListener(aVoid -> Log.d("Database", "Manager added with no employees"))
+                .addOnFailureListener(e -> Log.w("Database", "Error adding manager", e));
     }
 //    public void createAccountWithPhoneNumber(SignupActivity activity, String phoneNumber, String password, User userData) {
 //        FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -200,4 +225,26 @@ public class Database {
                     // failure
                 });
     }
+
+    public void isEmailPreApproved(String email, final EmailApprovalCallback callback) {
+        db.collection("PreApprovedEmails").whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        // Email is pre-approved
+                        callback.onEmailApproved(true);
+                    } else {
+                        // Email is not pre-approved
+                        callback.onEmailApproved(false);
+                    }
+                })
+                .addOnFailureListener(e -> callback.onError(e));
+    }
+
+    public interface EmailApprovalCallback {
+        void onEmailApproved(boolean isApproved);
+        void onError(Exception e);
+    }
+
+
 }

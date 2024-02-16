@@ -1,53 +1,35 @@
 package com.example.myapplication.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.myapplication.Model.Database;
 import com.example.myapplication.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ManagerActivity extends AppCompatActivity {
 
-    TextView textView;
-    Button btnBack;
-    Database database;
-
+    Button addNewEmmBut, logoutButton;
+    private FirebaseAuth mAuth; // Add this line
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager);
-        findViews();
-        initPlay();
-    }
 
-    private void findViews() {
-        btnBack = findViewById(R.id.back_button_manager);
-    }
+        addNewEmmBut = findViewById(R.id.addNewEmployee);
+        mAuth = FirebaseAuth.getInstance(); // Initialize Firebase Auth
 
-
-    public void initPlay() {
-
-        database = new Database();
-
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        addNewEmmBut.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(ManagerActivity.this, "Back", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ManagerActivity.this, MainActivity.class);
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AddPreApprovedEmployeeActivity.class);
                 startActivity(intent);
-                database.logout();
-
-                finish();
             }
         });
-    }
 
+    }
 }

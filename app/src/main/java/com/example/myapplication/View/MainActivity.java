@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     }else{
                         Toast.makeText(MainActivity.this,"Hello Manager",Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivity.this, MainPreWork.class);
+                        Intent intent = new Intent(MainActivity.this, ManagerActivity.class);
                         startActivity(intent);
                         finish();
                     }

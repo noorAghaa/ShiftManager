@@ -1,12 +1,15 @@
 package com.example.myapplication.Model;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.myapplication.Controller.AuthCallBack;
 import com.example.myapplication.Controller.UserCallBack;
+import com.example.myapplication.View.MainActivity;
+import com.example.myapplication.View.SignupActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -14,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -30,6 +34,8 @@ public class Database {
     public static final String USERS_TABLE = "Employees";
     public static final String SHIFTS_TABLE = "Shifts"; // Define shifts collection name
     public static final String MANAGERS_TABLE = "Managers";
+    public static final String PRE_APPROVED_EMAILS_TABLE = "PreApprovedEmails";
+
 
 
     private FirebaseAuth mAuth;
@@ -77,6 +83,30 @@ public class Database {
                             if (userData.getAccount_type() == 1) {
                                 // Add an entry for this manager in the Managers table with an empty list of employees
                                 addManagerWithNoEmployees(userId);
+                            } else{
+                                // Regular employee account creation
+                                // Retrieve managerId and salary from preApprovedEmails
+                                db.collection(PRE_APPROVED_EMAILS_TABLE).document(email).get()
+                                        .addOnSuccessListener(documentSnapshot -> {
+                                            if (documentSnapshot.exists()) {
+                                                String managerId = documentSnapshot.getString("managerId");
+                                                String salary = documentSnapshot.getString("salary");
+
+
+                                                // Add employee to their manager's list
+                                                addEmployeeToManagerList(userId, managerId);
+
+                                                // Add salary to Salaries collection
+                                                addSalaryToSalariesCollection(userId, salary);
+
+                                                authCallBack.onCreateAccountComplete(true, "");
+                                            } else {
+                                                // Email not found in preApprovedEmails
+                                                authCallBack.onCreateAccountComplete(false, "Employee's email not pre-approved.");
+                                            }
+                                        })
+                                        .addOnFailureListener(e -> authCallBack.onCreateAccountComplete(false, e.getMessage()));
+
                             }
 
                             authCallBack.onCreateAccountComplete(true, "");
@@ -86,6 +116,23 @@ public class Database {
                     }
                 });
     }
+    private void addEmployeeToManagerList(String userId, String managerId) {
+        db.collection(MANAGERS_TABLE).document(managerId)
+                .update("employeeIds", FieldValue.arrayUnion(userId))
+                .addOnSuccessListener(aVoid -> Log.d("Database", "Employee " + userId + " added to manager's list: " + managerId))
+                .addOnFailureListener(e -> Log.e("Database", "Error adding employee to manager's list", e));
+    }
+    private void addSalaryToSalariesCollection(String userId, String salary) {
+        Map<String, Object> salaryData = new HashMap<>();
+        salaryData.put("salary", salary);
+
+        db.collection("Salaries").document(userId)
+                .set(salaryData)
+                .addOnSuccessListener(aVoid -> Log.d("Database", "Salary for user " + userId + " added successfully"))
+                .addOnFailureListener(e -> Log.e("Database", "Error adding salary for user " + userId, e));
+    }
+
+
 
     private void addManagerWithNoEmployees(String managerId) {
         // Create a new manager document with an empty list of employee IDs
@@ -96,6 +143,41 @@ public class Database {
                 .addOnSuccessListener(aVoid -> Log.d("Database", "Manager added with no employees"))
                 .addOnFailureListener(e -> Log.w("Database", "Error adding manager", e));
     }
+
+    public void checkAndCreateAccount(final String email, final String password, final User userData, final AuthCallBack callback) {
+        if (userData.getAccount_type() == 1) {
+            // This block is for creating an account directly if the user is a manager
+            createAccount(email, password, userData);
+        } else {
+            // Check for pre-approved emails for employees
+            db.collection(PRE_APPROVED_EMAILS_TABLE).document(email).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null && document.exists()) {
+                        // Email is pre-approved, proceed to create account
+                        createAccount(email, password, userData);
+                    } else {
+                        // Email not pre-approved, notify the user
+                        Log.w("Database", "Email not pre-approved for account creation");
+                        callback.onCreateAccountComplete(false, "Your email has not been approved by a manager.");
+                    }
+                } else {
+                    Log.e("Database", "Error checking pre-approved emails", task.getException());
+                    callback.onCreateAccountComplete(false, task.getException().getMessage());
+                }
+            });
+        }
+    }
+
+
+    public void removePreApprovedEmail(String email, PreApprovedEmailCallback callback) {
+        db.collection(PRE_APPROVED_EMAILS_TABLE).document(email).delete()
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(callback::onFailure);
+    }
+
+
+
 //    public void createAccountWithPhoneNumber(SignupActivity activity, String phoneNumber, String password, User userData) {
 //        FirebaseAuth mAuth = FirebaseAuth.getInstance();
 //
@@ -226,24 +308,19 @@ public class Database {
                 });
     }
 
-    public void isEmailPreApproved(String email, final EmailApprovalCallback callback) {
-        db.collection("PreApprovedEmails").whereEqualTo("email", email)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        // Email is pre-approved
-                        callback.onEmailApproved(true);
-                    } else {
-                        // Email is not pre-approved
-                        callback.onEmailApproved(false);
-                    }
-                })
-                .addOnFailureListener(e -> callback.onError(e));
+    public void addPreApprovedEmail(String email, String salary, String managerId, PreApprovedEmailCallback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("salary", salary);
+        data.put("managerId", managerId);
+
+        db.collection(PRE_APPROVED_EMAILS_TABLE).document(email).set(data)
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(callback::onFailure);
     }
 
-    public interface EmailApprovalCallback {
-        void onEmailApproved(boolean isApproved);
-        void onError(Exception e);
+    public interface PreApprovedEmailCallback {
+        void onSuccess();
+        void onFailure(@NonNull Exception e);
     }
 
 

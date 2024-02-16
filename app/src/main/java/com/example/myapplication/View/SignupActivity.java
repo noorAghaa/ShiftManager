@@ -78,13 +78,10 @@ public class SignupActivity extends AppCompatActivity {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!checkInput()){
+                if (!checkInput()) {
                     Toast.makeText(SignupActivity.this, "Error CheckInput", Toast.LENGTH_LONG).show();
-
                     return;
                 }
-
-                Toast.makeText(SignupActivity.this, "Success", Toast.LENGTH_SHORT).show();
 
                 User employee = new User();
                 employee.setEmail(signupEmail.getText().toString());
@@ -92,18 +89,31 @@ public class SignupActivity extends AppCompatActivity {
                 employee.setLastname(lastname.getText().toString());
                 employee.setPhoneNumber(phoneNumber.getText().toString());
                 employee.setPassword(signupPassword.getText().toString());
-
                 int accountType = accountTypeSwitch.isChecked() ? 1 : 0;
                 employee.setAccount_type(accountType);
 
-                String password = signupPassword.getText().toString().trim();
-                String id = Id_Number.getText().toString().trim();
                 String email = signupEmail.getText().toString();
+                String password = signupPassword.getText().toString().trim();
 
-                database.createAccount(email,password,employee);
-//                database.createAccountWithPhoneNumber(SignupActivity.this,employee.getPhoneNumber(), password, employee);
+                // Modified call to include callback handling
+                database.checkAndCreateAccount(email, password, employee, new AuthCallBack() {
+                    @Override
+                    public void onLoginComplete(Task<AuthResult> task) {
+                        // Not used here
+                    }
+
+                    @Override
+                    public void onCreateAccountComplete(boolean status, String err) {
+                        if (status) {
+                            Toast.makeText(SignupActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(SignupActivity.this, err, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
+
 
 
         txtV_button_back.setOnClickListener(new View.OnClickListener() {

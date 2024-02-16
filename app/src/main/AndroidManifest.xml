@@ -49,6 +49,9 @@
             android:name=".View.SignupActivity"
             android:exported="false" />
         <activity
+            android:name=".View.LoginActivity"
+            android:exported="true" />
+        <activity
             android:name=".View.ForgotPasswordActivity"
             android:exported="false" />
         <activity

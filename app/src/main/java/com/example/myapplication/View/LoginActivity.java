@@ -21,12 +21,10 @@ import com.google.firebase.auth.AuthResult;
 public class LoginActivity extends AppCompatActivity {
 
 
-    private EditText IdText, password_edit,edit_phoneNumber;
-    private Button login_btn;
-    TextView login_register;
-    TextView forgotPassword;
+    private EditText IdText, password_edit;
     private Button loginButton;
-    TextView login_BTN_signup;
+    TextView forgotPasswordButtn, signupRedirectButton;
+
     private Database database;
 
     @Override
@@ -39,12 +37,11 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void findViews() {
-        IdText = findViewById(R.id.loginId);
-        password_edit = findViewById(R.id.login_password);
-        login_btn = findViewById(R.id.login_button);
-        login_register = findViewById(R.id.signupRedirectText);
-        forgotPassword = findViewById(R.id.forgotPassword);
-        edit_phoneNumber = findViewById(R.id.edit_phoneNumber);
+        IdText = findViewById(R.id.loginIdEdit);
+        password_edit = findViewById(R.id.login_passwordEdit);
+        loginButton = findViewById(R.id.login_button);
+        signupRedirectButton = findViewById(R.id.signupRedirectButton);
+        forgotPasswordButtn = findViewById(R.id.forgotPasswordButtn);
     }
 
 
@@ -102,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        login_BTN_signup.setOnClickListener(new View.OnClickListener() {
+        signupRedirectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
@@ -117,7 +114,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String email = IdText.getText().toString().trim();
                 String password = password_edit.getText().toString().trim();
-                String phoneNumber = edit_phoneNumber.getText().toString().trim();
 
                 if(email.isEmpty() ){
                     Toast.makeText(LoginActivity.this,"request email",Toast.LENGTH_SHORT).show();
@@ -133,7 +129,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        forgotPassword.setOnClickListener(new View.OnClickListener() {
+        forgotPasswordButtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);

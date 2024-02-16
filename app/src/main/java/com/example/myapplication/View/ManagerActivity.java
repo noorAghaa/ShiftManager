@@ -12,8 +12,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class ManagerActivity extends AppCompatActivity {
 
-    Button addNewEmmBut, logoutButton;
-    private FirebaseAuth mAuth; // Add this line
+    Button addNewEmmBut, logoutButton; // Declare the logoutButton
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,8 @@ public class ManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_manager);
 
         addNewEmmBut = findViewById(R.id.addNewEmployee);
-        mAuth = FirebaseAuth.getInstance(); // Initialize Firebase Auth
+        logoutButton = findViewById(R.id.logoutButton); // Initialize the logoutButton
+        mAuth = FirebaseAuth.getInstance();
 
         addNewEmmBut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -31,5 +32,19 @@ public class ManagerActivity extends AppCompatActivity {
             }
         });
 
+        // Set onClickListener for the logout button
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Logout the user
+                mAuth.signOut();
+                // Redirect to Login Activity
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear the activity stack
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }
+

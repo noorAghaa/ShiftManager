@@ -99,6 +99,18 @@ public class Database {
                                                 // Add salary to Salaries collection
                                                 addSalaryToSalariesCollection(userId, salary);
 
+                                                removePreApprovedEmail(email, new Database.PreApprovedEmailCallback() {
+                                                    @Override
+                                                    public void onSuccess() {
+                                                        Log.d("Database", "Pre-approved email removed successfully.");
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.e("Database", "Failed to remove pre-approved email: " + e.getMessage());
+                                                    }
+                                                });
+
                                                 authCallBack.onCreateAccountComplete(true, "");
                                             } else {
                                                 // Email not found in preApprovedEmails

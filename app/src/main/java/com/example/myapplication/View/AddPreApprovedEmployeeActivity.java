@@ -38,7 +38,7 @@ public class AddPreApprovedEmployeeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String email = emailEditText.getText().toString().trim();
                 String salary = salaryEditText.getText().toString().trim();
-                if (!email.isEmpty() && !salary.isEmpty()) {
+                if (isValidEmail(email) && isValidSalary(salary)) {
                     String managerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     database.addPreApprovedEmail(email, salary, managerId, new Database.PreApprovedEmailCallback() {
                         @Override
@@ -53,10 +53,24 @@ public class AddPreApprovedEmployeeActivity extends AppCompatActivity {
                         }
                     });
                 } else {
-                    Toast.makeText(AddPreApprovedEmployeeActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddPreApprovedEmployeeActivity.this, "Please enter a valid email and salary", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    private boolean isValidEmail(String email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private boolean isValidSalary(String salary) {
+        try {
+            // This will throw an exception if the salary is not a valid double
+            Double.parseDouble(salary);
+            return true; // Salary is a valid double
+        } catch (NumberFormatException e) {
+            return false; // Salary is not a valid double
+        }
     }
 
     private void addEmailToView(String email) {

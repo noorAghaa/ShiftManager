@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.example.myapplication.Controller.AuthCallBack;
 import com.example.myapplication.Controller.UserCallBack;
+import com.example.myapplication.Controller.UsersCallback;
 import com.example.myapplication.View.MainActivity;
 import com.example.myapplication.View.SignupActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -330,10 +331,25 @@ public class Database {
                 .addOnFailureListener(callback::onFailure);
     }
 
+    public void fetchEmployeesUnderManager(String managerId, UsersCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Managers")
+                .whereEqualTo("managerId", managerId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<User> employees = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        User employee = document.toObject(User.class);
+                        employees.add(employee);
+                    }
+                    callback.onUsersFetchDataComplete(employees);
+                })
+                .addOnFailureListener(e -> callback.onError(e));
+    }
+
+
     public interface PreApprovedEmailCallback {
         void onSuccess();
         void onFailure(@NonNull Exception e);
     }
-
-
 }

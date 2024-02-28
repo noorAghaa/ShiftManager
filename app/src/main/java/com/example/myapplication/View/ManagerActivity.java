@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class ManagerActivity extends AppCompatActivity {
 
-    Button addNewEmmBut, logoutButton; // Declare the logoutButton
+    Button addNewEmmBut, logoutButton, viewEmployeesButton; // Declare the logoutButton
     private FirebaseAuth mAuth;
 
     @Override
@@ -22,6 +22,7 @@ public class ManagerActivity extends AppCompatActivity {
 
         addNewEmmBut = findViewById(R.id.addNewEmployee);
         logoutButton = findViewById(R.id.logoutButton); // Initialize the logoutButton
+        viewEmployeesButton = findViewById(R.id.viewEmployeesButton); // Initialize the viewEmployeesButton
         mAuth = FirebaseAuth.getInstance();
 
         addNewEmmBut.setOnClickListener(new View.OnClickListener() {
@@ -43,6 +44,16 @@ public class ManagerActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear the activity stack
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        // Set onClickListener for the viewEmployeesButton
+        viewEmployeesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start the ViewEmployeesActivity
+                Intent intent = new Intent(ManagerActivity.this, ViewEmployeesActivity.class);
+                startActivity(intent);
             }
         });
     }

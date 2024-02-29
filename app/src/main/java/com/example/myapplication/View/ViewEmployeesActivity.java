@@ -1,5 +1,6 @@
 package com.example.myapplication.View;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -32,7 +33,11 @@ public class ViewEmployeesActivity extends AppCompatActivity {
 
         employeesRecyclerView = findViewById(R.id.employeesRecyclerView);
         employeesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new EmployeesAdapter(this, employeesList);
+        adapter = new EmployeesAdapter(this, employeesList, userId -> {
+            Intent intent = new Intent(ViewEmployeesActivity.this, MainShifts.class);
+            intent.putExtra("EXTRA_EMPLOYEE_ID", userId); // Use this key in MainShifts to retrieve the Email
+            startActivity(intent);
+        });
         employeesRecyclerView.setAdapter(adapter);
 
         String managerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -62,6 +67,7 @@ public class ViewEmployeesActivity extends AppCompatActivity {
             db.collection("Employees").document(id).get().addOnSuccessListener(documentSnapshot -> {
                 User employee = documentSnapshot.toObject(User.class);
                 if (employee != null) {
+                    employee.setMyId(documentSnapshot.getId());
                     employees.add(employee);
                 }
                 if (counter.decrementAndGet() == 0) {

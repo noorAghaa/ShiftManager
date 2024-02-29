@@ -296,6 +296,24 @@ public class Database {
                 });
     }
 
+    public void fetchShiftsForManager(String userId, final ShiftDataCallback callback) {
+        db.collection(SHIFTS_TABLE)
+                .whereEqualTo("userId", userId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Shift> shifts = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Shift shift = document.toObject(Shift.class);
+                            shifts.add(shift);
+                        }
+                        callback.onShiftDataFetched(shifts);
+                    } else {
+                        callback.onError(task.getException());
+                    }
+                });
+    }
+
     public interface ShiftDataCallback {
         void onShiftDataFetched(List<Shift> shifts);
         void onError(Exception e);

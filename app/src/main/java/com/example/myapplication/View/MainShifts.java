@@ -36,7 +36,13 @@ public class MainShifts extends AppCompatActivity {
         database = new Database();
         setupRecyclerView();
         setupSelectDateButton();
-        fetchShifts();
+        // Retrieve the employee email passed from ViewEmployeesActivity
+        String employeeId = getIntent().getStringExtra("EXTRA_EMPLOYEE_ID");
+        if (employeeId != null) {
+            fetchShiftsForManager(employeeId);
+        } else {
+            fetchShifts();
+        }
     }
 
     private void setupRecyclerView() {
@@ -89,6 +95,22 @@ public class MainShifts extends AppCompatActivity {
     private void fetchShifts() {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         database.fetchShifts(userId, new Database.ShiftDataCallback() {
+            @Override
+            public void onShiftDataFetched(List<Shift> shifts) {
+                allShifts.clear();
+                allShifts.addAll(shifts);
+                // Optionally call filterShiftsByYearAndMonth here with a default or current year and month
+            }
+
+            @Override
+            public void onError(Exception e) {
+                // Handle error
+            }
+        });
+    }
+
+    private void fetchShiftsForManager(String employeeId) {
+        database.fetchShiftsForManager(employeeId, new Database.ShiftDataCallback() {
             @Override
             public void onShiftDataFetched(List<Shift> shifts) {
                 allShifts.clear();

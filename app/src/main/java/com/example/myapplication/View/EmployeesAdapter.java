@@ -16,9 +16,16 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.Empl
     private Context context;
     private List<User> employeesList;
 
-    public EmployeesAdapter(Context context, List<User> employeesList) {
+    public interface OnEmployeeClickListener {
+        void onEmployeeClicked(String userId);
+    }
+
+    private OnEmployeeClickListener listener;
+
+    public EmployeesAdapter(Context context, List<User> employeesList, OnEmployeeClickListener listener) {
         this.context = context;
         this.employeesList = employeesList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -34,9 +41,9 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.Empl
         // Concatenate the first name and the last name with a space in between
         String fullName = employee.getFirstname() + " " + employee.getLastname();
         holder.nameTextView.setText(fullName);
+        holder.itemView.setOnClickListener(v -> listener.onEmployeeClicked(employee.getMyId()));
         // Set other employee details here
     }
-
 
     @Override
     public int getItemCount() {

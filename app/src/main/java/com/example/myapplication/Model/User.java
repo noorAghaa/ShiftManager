@@ -16,9 +16,11 @@ public class User extends FirebaseKey implements Serializable {
     private String imagePath;
     private String imageUrl;
 
+    private String myId;
 
+    public void setMyId(String setId){ this.myId = setId; }
 
-
+    public String getMyId(){return myId; }
 
     public String getImagePath() {
         return imagePath;
@@ -97,7 +99,4 @@ public class User extends FirebaseKey implements Serializable {
     public String getKey(){return key;}
 
     public void setKeyOn(String key){this.key= key;}
-
-
-
 }

@@ -83,36 +83,56 @@ public class SignupActivity extends AppCompatActivity {
                     return;
                 }
 
-                User employee = new User();
-                employee.setEmail(signupEmail.getText().toString());
-                employee.setFirstname(firstname.getText().toString());
-                employee.setLastname(lastname.getText().toString());
-                employee.setPhoneNumber(phoneNumber.getText().toString());
-                employee.setPassword(signupPassword.getText().toString());
-                int accountType = accountTypeSwitch.isChecked() ? 1 : 0;
-                employee.setAccount_type(accountType);
-
                 String email = signupEmail.getText().toString();
-                String password = signupPassword.getText().toString().trim();
 
-                // Modified call to include callback handling
-                database.checkAndCreateAccount(email, password, employee, new AuthCallBack() {
+                // Check if user already exists
+                database.checkUserExists(email, new Database.UserExistsCallback() {
                     @Override
-                    public void onLoginComplete(Task<AuthResult> task) {
-                        // Not used here
+                    public void onUserExistsCheckComplete(boolean exists) {
+                        if (exists) {
+                            // User already exists, show error message
+                            Toast.makeText(SignupActivity.this, "User already exists with this email", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // User doesn't exist, proceed with account creation
+                            User employee = new User();
+                            employee.setEmail(email);
+                            employee.setFirstname(firstname.getText().toString());
+                            employee.setLastname(lastname.getText().toString());
+                            employee.setPhoneNumber(phoneNumber.getText().toString());
+                            employee.setPassword(signupPassword.getText().toString());
+                            int accountType = accountTypeSwitch.isChecked() ? 1 : 0;
+                            employee.setAccount_type(accountType);
+
+                            String password = signupPassword.getText().toString().trim();
+
+                            // Modified call to include callback handling
+                            database.checkAndCreateAccount(email, password, employee, new AuthCallBack() {
+                                @Override
+                                public void onLoginComplete(Task<AuthResult> task) {
+                                    // Not used here
+                                }
+
+                                @Override
+                                public void onCreateAccountComplete(boolean status, String err) {
+                                    if (status) {
+                                        Toast.makeText(SignupActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(SignupActivity.this, err, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
                     }
 
                     @Override
-                    public void onCreateAccountComplete(boolean status, String err) {
-                        if (status) {
-                            Toast.makeText(SignupActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(SignupActivity.this, err, Toast.LENGTH_SHORT).show();
-                        }
+                    public void onUserExistsCheckFailure(Exception e) {
+                        // Handle failure
+                        Toast.makeText(SignupActivity.this, "Failed to check user existence: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
+
 
 
 
@@ -153,6 +173,8 @@ public class SignupActivity extends AppCompatActivity {
             Toast.makeText(SignupActivity.this, "Please fill all user info!", Toast.LENGTH_SHORT).show();
             return false;
         }
+
+
 
         if(password.length() < 8){
             Toast.makeText(SignupActivity.this, "Password must be at least 8 characters", Toast.LENGTH_SHORT).show();

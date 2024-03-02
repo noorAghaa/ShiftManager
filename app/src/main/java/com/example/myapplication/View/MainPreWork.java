@@ -13,10 +13,11 @@ import com.example.myapplication.Model.User;
 import com.example.myapplication.R;
 import com.example.myapplication.Controller.UserCallBack;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainPreWork extends AppCompatActivity {
-
+    private FirebaseAuth mAuth;
     private TextView userInfoTextView;
     private Database database;
     @Override
@@ -28,9 +29,9 @@ public class MainPreWork extends AppCompatActivity {
         userInfoTextView = findViewById(R.id.helo_user);
 
         database = new Database(); // Initialize your Database instance
-
+        mAuth = FirebaseAuth.getInstance();
         fetchAndDisplayUserData(); // Fetch and display user data
-
+        Button logoutButton = findViewById(R.id.now_button); // Initialize the logoutButton
         Button start_button = findViewById(R.id.start_button);
         Button shifts_button = findViewById(R.id.shift_button);
         Button workmenu_button = findViewById(R.id.work_button);
@@ -55,6 +56,21 @@ public class MainPreWork extends AppCompatActivity {
             public void onClick(View v) {
                 Intent curr_activity = new Intent(MainPreWork.this, MainWorkMenu.class);
                 startActivity(curr_activity);
+            }
+        });
+
+
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Logout the user
+                mAuth.signOut();
+                // Redirect to Login Activity
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear the activity stack
+                startActivity(intent);
+                finish();
             }
         });
     }

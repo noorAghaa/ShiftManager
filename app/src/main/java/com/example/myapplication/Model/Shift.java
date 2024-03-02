@@ -77,4 +77,17 @@ public class Shift {
     public String getUserId() { return userId; } // Getter for userId
 
     public Date getEnd_date() { return  end_date; }
+
+    // Method to calculate the duration of the shift in hours
+    public double calculateDurationInHours() {
+        // Parse start and end times
+        Date startTime = parseTimeString(duration.split(" - ")[0]);
+        Date endTime = parseTimeString(duration.split(" - ")[1]);
+
+        // Calculate duration in milliseconds
+        long durationInMillis = endTime.getTime() - startTime.getTime();
+
+        // Convert milliseconds to hours
+        return durationInMillis / (1000.0 * 60.0 * 60.0);
+    }
 }

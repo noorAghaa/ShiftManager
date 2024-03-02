@@ -1,7 +1,7 @@
 package com.example.myapplication.Model;
 
+import android.icu.util.Calendar;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,21 +9,22 @@ import androidx.annotation.Nullable;
 import com.example.myapplication.Controller.AuthCallBack;
 import com.example.myapplication.Controller.UserCallBack;
 import com.example.myapplication.Controller.UsersCallback;
-import com.example.myapplication.View.MainActivity;
-import com.example.myapplication.View.SignupActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,8 @@ public class Database {
     public static final String MANAGERS_TABLE = "Managers";
     public static final String PRE_APPROVED_EMAILS_TABLE = "PreApprovedEmails";
 
+  //  private int month; // Declare month as a class-level variable
+
 
 
     private FirebaseAuth mAuth;
@@ -48,6 +51,7 @@ public class Database {
     public Database(){
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        //this.month=0;
     }
 
     public void setAuthCallBack(AuthCallBack authCallBack){
@@ -370,4 +374,136 @@ public class Database {
         void onSuccess();
         void onFailure(@NonNull Exception e);
     }
+
+
+    public void fetchSalary(String userId, SalaryFetchCallback callback) {
+        db.collection("Salaries").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String hourlySalary = documentSnapshot.getString("salary");
+                        if (hourlySalary != null) {
+                            callback.onSalaryFetch(hourlySalary);
+                        } else {
+                            callback.onError(new NullPointerException("Hourly salary is null"));
+                        }
+                    } else {
+                        callback.onError(new NullPointerException("Document does not exist"));
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    callback.onError(e);
+                });
+    }
+
+
+
+    public interface SalaryFetchCallback {
+        void onSalaryFetch(String hourlySalary);
+        void onError(Exception e);
+    }
+
+
+    public void checkUserIdExists(String userId, UserIdCheckCallback callback) {
+        db.collection(USERS_TABLE).document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // User ID exists
+                        callback.onUserIdExists(true);
+                    } else {
+                        // User ID does not exist
+                        callback.onUserIdExists(false);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                    callback.onFailure(e);
+                });
+    }
+
+    public interface UserIdCheckCallback {
+        void onUserIdExists(boolean exists);
+        void onFailure(Exception e);
+    }
+
+
+    public void checkUserExists(String email, final UserExistsCallback callback) {
+        db.collection(USERS_TABLE)
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        boolean exists = !task.getResult().isEmpty();
+                        callback.onUserExistsCheckComplete(exists);
+                    } else {
+                        // Handle failure
+                        callback.onUserExistsCheckFailure(task.getException());
+                    }
+                });
+    }
+
+    public interface UserExistsCallback {
+        void onUserExistsCheckComplete(boolean exists);
+        void onUserExistsCheckFailure(Exception e);
+    }
+
+
+    // In Database.java
+    public void fetchShiftsForMonth(String userId, int year, int month, ShiftDataCallback callback) {
+        Log.d("Database", "Fetching shifts for Year: " + year + ", Month: " + month + ", User ID: " + userId);
+
+        // Get a reference to your Firestore collection containing shifts
+        CollectionReference shiftsRef = FirebaseFirestore.getInstance().collection("Shifts");
+
+        // Calculate the start and end dates of the month
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, 1);
+        Date startDate = calendar.getTime();
+        calendar.set(Calendar.MONTH, month + 1);
+        Date endDate = calendar.getTime();
+
+        // Query shifts for the specified user and date range
+        Query query = shiftsRef.whereEqualTo("userId", userId)
+                .whereGreaterThanOrEqualTo("date", startDate)
+                .whereLessThan("date", endDate);
+
+        // Execute the query
+        query.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            Log.d("Database", "Shifts query successful");
+            List<Shift> shifts = new ArrayList<>();
+            for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                // Convert Firestore document to Shift object
+                Shift shift = document.toObject(Shift.class);
+                shifts.add(shift);
+            }
+
+            // Pass the list of shifts to the callback
+            callback.onShiftDataFetched(shifts);
+        }).addOnFailureListener(e -> {
+            Log.e("Database", "Error fetching shifts: " + e.getMessage());
+            // Handle any errors
+            callback.onError(e);
+        });
+    }
+
+
+
+
+    public void getAllShifts(ShiftDataCallback callback) {
+        db.collection(SHIFTS_TABLE)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Shift> shifts = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Shift shift = document.toObject(Shift.class);
+                            shifts.add(shift);
+                        }
+                        callback.onShiftDataFetched(shifts);
+                    } else {
+                        callback.onError(task.getException());
+                    }
+                });
+    }
+
+
 }

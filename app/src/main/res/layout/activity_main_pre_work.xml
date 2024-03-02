@@ -10,7 +10,7 @@
         android:id="@+id/now_button"
         android:layout_width="111dp"
         android:layout_height="61dp"
-        android:text="Now"
+        android:text="Log Out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

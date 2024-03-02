@@ -13,13 +13,19 @@
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
         <activity
+            android:name=".View.MonthlyActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".View.TimerService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
             android:name=".View.AddPreApprovedEmployeeActivity"
             android:exported="false" />
         <activity
             android:name=".View.ExtraHoursActivity"
-            android:exported="false" />
-        <activity
-            android:name=".View.TravelingExpensesActivity"
             android:exported="false" />
         <activity
             android:name=".View.CalculateActivity"

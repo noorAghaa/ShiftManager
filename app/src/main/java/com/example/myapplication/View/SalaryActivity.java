@@ -43,16 +43,17 @@ public class SalaryActivity extends AppCompatActivity {
         // Read shifts from Firestore and calculate salary
         calculateSalary();
     }
-
     private void calculateSalary() {
         // Get current user's ID
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Declare totalHoursWorked as final
+        final double[] totalHoursWorked = {0}; // Initialize as an array to make it mutable
 
         // Query Firestore to retrieve shifts for the current user
         database.fetchShifts(userId, new Database.ShiftDataCallback() {
             @Override
             public void onShiftDataFetched(List<Shift> shifts) {
-                double totalHoursWorked = 0;
 
                 // Get the current month and year
                 Calendar calendar = Calendar.getInstance();
@@ -74,29 +75,43 @@ public class SalaryActivity extends AppCompatActivity {
                         String startTime = durationParts[0];
                         String endTime = durationParts[1];
                         double hoursWorked = calculateHoursWorked(startTime, endTime);
-                        totalHoursWorked += hoursWorked;
+                        totalHoursWorked[0] += hoursWorked;
                     }
                 }
 
-                // Calculate salary based on total hours worked (assuming $30 per hour)
-                double salary = totalHoursWorked * 30;
+                // Fetch hourly salary from Firestore
+                database.fetchSalary(userId, new Database.SalaryFetchCallback() {
+                    @Override
+                    public void onSalaryFetch(String hourlySalary) {
+                        // Calculate salary based on total hours worked and hourly salary
+                        double salary = totalHoursWorked[0] * Double.parseDouble(hourlySalary);
 
-                // Pass the salary back to the calling activity
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("salary", salary);
-                setResult(RESULT_OK, resultIntent);
-                finish();
+                        // Pass the salary back to the calling activity
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra("salary", salary);
+                        setResult(RESULT_OK, resultIntent);
+                        finish();
 
-                // Display salary in TextView
-                salaryTextView.setText(String.format(Locale.getDefault(), "Salary: $%.2f", salary));
+                        // Display salary in TextView
+                        salaryTextView.setText(String.format(Locale.getDefault(), "Salary: $%.2f", salary));
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        // Handle error fetching salary
+                        Toast.makeText(SalaryActivity.this, "Error fetching salary: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
             public void onError(Exception e) {
-
+                // Handle error fetching shifts
+                Toast.makeText(SalaryActivity.this, "Error fetching shifts: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
 
 

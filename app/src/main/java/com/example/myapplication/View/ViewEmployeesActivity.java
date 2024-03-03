@@ -33,11 +33,15 @@ public class ViewEmployeesActivity extends AppCompatActivity {
 
         employeesRecyclerView = findViewById(R.id.employeesRecyclerView);
         employeesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new EmployeesAdapter(this, employeesList, userId -> {
-            Intent intent = new Intent(ViewEmployeesActivity.this, MainShifts.class);
-            intent.putExtra("EXTRA_EMPLOYEE_ID", userId); // Use this key in MainShifts to retrieve the Email
-            startActivity(intent);
+        adapter = new EmployeesAdapter(this, employeesList, new EmployeesAdapter.OnEmployeeClickListener() {
+            @Override
+            public void onEmployeeClicked(String userId) {
+                Intent intent = new Intent(ViewEmployeesActivity.this, MainShifts.class);
+                intent.putExtra("EXTRA_EMPLOYEE_ID", userId);
+                startActivity(intent);
+            }
         });
+
         employeesRecyclerView.setAdapter(adapter);
 
         String managerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -80,4 +84,6 @@ public class ViewEmployeesActivity extends AppCompatActivity {
             });
         }
     }
+
+
 }

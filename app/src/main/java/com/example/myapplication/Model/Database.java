@@ -485,10 +485,22 @@ public class Database {
         });
     }
 
+    public void updateSalary(String userId, String newSalary, SalaryUpdateCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> salaryUpdate = new HashMap<>();
+        salaryUpdate.put("salary", newSalary); // Assuming 'salary' is the field name in your Firestore collection
 
+        db.collection("Employees") // Assuming 'Employees' is the collection where salaries are stored
+                .document(userId)
+                .update(salaryUpdate)
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e));
+    }
 
-
-
+    public interface SalaryUpdateCallback {
+        void onSuccess();
+        void onFailure(Exception e);
+    }
 
 
 }

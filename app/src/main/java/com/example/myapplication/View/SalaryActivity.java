@@ -24,7 +24,8 @@ import com.example.myapplication.Model.Database;
 
 public class SalaryActivity extends AppCompatActivity {
     private Database database = new Database();
-
+    private static final double EXTRA_HOURS_MULTIPLIER = 1.5; // 150% increase for extra hours
+    private static final double REGULAR_WORKING_HOURS_PER_DAY = 8; // Assuming 8 hours per day is regular working hours
     private FirebaseFirestore db;
     private CollectionReference shiftsRef;
     private TextView salaryTextView;
@@ -47,8 +48,9 @@ public class SalaryActivity extends AppCompatActivity {
         // Get current user's ID
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        // Declare totalHoursWorked as final
+        // Declare totalHoursWorked and extraHoursWorked as final
         final double[] totalHoursWorked = {0}; // Initialize as an array to make it mutable
+        final double[] extraHoursWorked = {0}; // Initialize as an array to make it mutable
 
         // Query Firestore to retrieve shifts for the current user
         database.fetchShifts(userId, new Database.ShiftDataCallback() {
@@ -61,6 +63,7 @@ public class SalaryActivity extends AppCompatActivity {
                 int currentMonth = calendar.get(Calendar.MONTH) + 1; // Adding 1 because Calendar.MONTH is zero-based
 
                 // Iterate through each shift and calculate total hours worked
+
                 for (Shift shift : shifts) {
                     // Extract shift date
                     Calendar shiftCalendar = Calendar.getInstance();
@@ -76,6 +79,11 @@ public class SalaryActivity extends AppCompatActivity {
                         String endTime = durationParts[1];
                         double hoursWorked = calculateHoursWorked(startTime, endTime);
                         totalHoursWorked[0] += hoursWorked;
+
+                        // Check if the hours worked exceed the regular working hours
+                        if (hoursWorked > REGULAR_WORKING_HOURS_PER_DAY) {
+                            extraHoursWorked[0] += hoursWorked - REGULAR_WORKING_HOURS_PER_DAY;
+                        }
                     }
                 }
 
@@ -83,17 +91,19 @@ public class SalaryActivity extends AppCompatActivity {
                 database.fetchSalary(userId, new Database.SalaryFetchCallback() {
                     @Override
                     public void onSalaryFetch(String hourlySalary) {
-                        // Calculate salary based on total hours worked and hourly salary
-                        double salary = totalHoursWorked[0] * Double.parseDouble(hourlySalary);
+                        // Calculate salary based on total hours worked, including extra hours
+                        double regularSalary = Math.min(totalHoursWorked[0], REGULAR_WORKING_HOURS_PER_DAY) * Double.parseDouble(hourlySalary);
+                        double extraHoursSalary = extraHoursWorked[0] * Double.parseDouble(hourlySalary) * EXTRA_HOURS_MULTIPLIER;
+                        double totalSalary = regularSalary + extraHoursSalary;
 
                         // Pass the salary back to the calling activity
                         Intent resultIntent = new Intent();
-                        resultIntent.putExtra("salary", salary);
+                        resultIntent.putExtra("salary", totalSalary);
                         setResult(RESULT_OK, resultIntent);
                         finish();
 
                         // Display salary in TextView
-                        salaryTextView.setText(String.format(Locale.getDefault(), "Salary: $%.2f", salary));
+                        salaryTextView.setText(String.format(Locale.getDefault(), "Salary: $%.2f", totalSalary));
                     }
 
                     @Override
@@ -111,6 +121,8 @@ public class SalaryActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 
 

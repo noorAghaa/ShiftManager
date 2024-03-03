@@ -25,7 +25,8 @@ public class MonthlyActivity extends AppCompatActivity {
 
     private Database database;
     private Spinner monthSpinner;
-
+    private static final double EXTRA_HOURS_MULTIPLIER = 1.5; // 150% increase for extra hours
+    private static final double REGULAR_WORKING_HOURS_PER_DAY = 8; // Assuming 8 hours per day is regular working hours
     private TextView monthlySalaryTextView;
     private Spinner yearSpinner;
     private Button calculateSalaryBtn;
@@ -85,8 +86,10 @@ public class MonthlyActivity extends AppCompatActivity {
         // Get current user's ID
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        // Declare totalHoursWorked as final
+        // Declare total hours worked, regular hours, and extra hours as final
         final double[] totalHoursWorked = {0}; // Initialize as an array to make it mutable
+        final double[] regularHours = {0};
+        final double[] extraHours = {0};
 
         // Query Firestore to retrieve shifts for the current user
         database.fetchShifts(userId, new Database.ShiftDataCallback() {
@@ -108,6 +111,14 @@ public class MonthlyActivity extends AppCompatActivity {
                         String endTime = durationParts[1];
                         double hoursWorked = calculateHoursWorked(startTime, endTime);
                         totalHoursWorked[0] += hoursWorked;
+
+                        // Check if the hours worked exceed regular working hours
+                        if (hoursWorked <= REGULAR_WORKING_HOURS_PER_DAY) {
+                            regularHours[0] += hoursWorked;
+                        } else {
+                            extraHours[0] += hoursWorked - REGULAR_WORKING_HOURS_PER_DAY;
+                            regularHours[0] += REGULAR_WORKING_HOURS_PER_DAY;
+                        }
                     }
                 }
 
@@ -115,12 +126,19 @@ public class MonthlyActivity extends AppCompatActivity {
                 database.fetchSalary(userId, new Database.SalaryFetchCallback() {
                     @Override
                     public void onSalaryFetch(String hourlySalary) {
-                        // Calculate monthly salary based on total hours worked and hourly salary
-                        double monthlySalary = totalHoursWorked[0] * Double.parseDouble(hourlySalary);
+                        // Calculate salary for regular hours
+                        double regularSalary = regularHours[0] * Double.parseDouble(hourlySalary);
+
+                        // Calculate salary for extra hours with extra multiplier
+                        double extraSalary = extraHours[0] * Double.parseDouble(hourlySalary) * EXTRA_HOURS_MULTIPLIER;
 
                         // Display the calculated monthly salary in the TextView
-                        String message = String.format(Locale.getDefault(), "Monthly Salary for %s %d: $%.2f",
-                                new DateFormatSymbols().getMonths()[selectedMonth - 1], selectedYear, monthlySalary);
+                        String message = String.format(Locale.getDefault(), "Monthly Salary for %s %d:\n" +
+                                        "Regular Hours: %.2f\nRegular Salary: $%.2f\n" +
+                                        "Extra Hours: %.2f\nExtra hours Salary: $%.2f\n"+
+                                        "total salary:%.2f",
+                                new DateFormatSymbols().getMonths()[selectedMonth - 1], selectedYear,
+                                regularHours[0], regularSalary, extraHours[0], extraSalary,(extraSalary+regularSalary));
                         monthlySalaryTextView.setText(message);
 
                         // Set total hours worked
@@ -143,6 +161,8 @@ public class MonthlyActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     private double calculateHoursWorked(String startTime, String endTime) {
         // Split start time and end time strings to extract hours and minutes

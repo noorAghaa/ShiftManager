@@ -18,13 +18,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.myapplication.Model.Database;
 import com.example.myapplication.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Locale;
 
 public class MainWorkMenu extends AppCompatActivity {
 
     private BroadcastReceiver broadcastReceiver;
+    private Database database = new Database();
 
     private CountDownTimer countDownTimer;
     private TextView timerTextView;
@@ -49,7 +52,6 @@ public class MainWorkMenu extends AppCompatActivity {
                     }
                 }
         );
-
 
 
 
@@ -144,13 +146,40 @@ public class MainWorkMenu extends AppCompatActivity {
         // Find the hourlySalaryTextView in your activity or fragment
         TextView hourlySalaryTextView = findViewById(R.id.hourlySalaryTextView);
 
-        // Get the current hourly salary from wherever you are fetching it
-        double currentHourlySalary = 20.0; // For example, replace this with your actual hourly salary value
+/// Find the hourlySalaryTextView in your activity or fragment
 
+// Set the text of the hourlySalaryTextView
+        hourlySalaryTextView.setText("Current hourly salary: Fetching..."); // Placeholder text until fetched
+        fetchHourlySalary(); // Start fetching the hourly salaryurrent hourly salary
+
+// Set the text of the hourlySalaryTextView
+        fetchHourlySalary();
+    }
+
+    private void fetchHourlySalary() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        database.fetchSalary(userId, new Database.SalaryFetchCallback() {
+            @Override
+            public void onSalaryFetch(String hourlySalary) {
+                // Convert hourly salary to double if needed
+                double hourlySalaryDouble = Double.parseDouble(hourlySalary);
+                // Update the UI with the fetched hourly salary
+                updateHourlySalaryUI(hourlySalaryDouble);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                // Handle errors
+                Log.e("MainWorkMenu", "Error fetching hourly salary: " + e.getMessage());
+            }
+        });
+    }
+
+    private void updateHourlySalaryUI(double hourlySalary) {
+        // Find the hourlySalaryTextView in your activity or fragment
+        TextView hourlySalaryTextView = findViewById(R.id.hourlySalaryTextView);
         // Set the text of the hourlySalaryTextView
-        hourlySalaryTextView.setText("Current hourly salary: $" + currentHourlySalary);
-
-
+        hourlySalaryTextView.setText("Current hourly salary: $" + hourlySalary);
     }
 
 

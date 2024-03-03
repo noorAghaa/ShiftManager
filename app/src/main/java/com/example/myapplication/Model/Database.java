@@ -488,22 +488,13 @@ public class Database {
 
 
 
-    public void getAllShifts(ShiftDataCallback callback) {
-        db.collection(SHIFTS_TABLE)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<Shift> shifts = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Shift shift = document.toObject(Shift.class);
-                            shifts.add(shift);
-                        }
-                        callback.onShiftDataFetched(shifts);
-                    } else {
-                        callback.onError(task.getException());
-                    }
-                });
-    }
+
 
 
 }
+
+
+
+
+
+

@@ -34,14 +34,14 @@
                 android:textColor="@color/purple"/>
 
             <EditText
-                android:id="@+id/loginIdEdit"
+                android:id="@+id/loginEmailEdit"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="40dp"
                 android:background="@drawable/purple_border"
                 android:drawableStart="@drawable/baseline_person_pin_24"
                 android:drawablePadding="8dp"
-                android:hint="@string/IdNumber"
+                android:hint="@string/Email"
                 android:padding="8dp"
                 android:textColor="@color/purple" />
 

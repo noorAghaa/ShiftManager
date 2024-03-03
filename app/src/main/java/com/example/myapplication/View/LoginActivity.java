@@ -21,7 +21,7 @@ import com.google.firebase.auth.AuthResult;
 public class LoginActivity extends AppCompatActivity {
 
 
-    private EditText IdText, password_edit;
+    private EditText emailEdit, password_edit;
     private Button loginButton;
     TextView forgotPasswordButtn, signupRedirectButton;
 
@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void findViews() {
-        IdText = findViewById(R.id.loginIdEdit);
+        emailEdit = findViewById(R.id.loginEmailEdit);
         password_edit = findViewById(R.id.login_passwordEdit);
         loginButton = findViewById(R.id.login_button);
         signupRedirectButton = findViewById(R.id.signupRedirectButton);
@@ -62,8 +62,10 @@ public class LoginActivity extends AppCompatActivity {
                         // Handle the case where login failed
                         Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
                     }
-
                     Toast.makeText(LoginActivity.this,"Success Login",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else {
                     String error = task.getException().getMessage().toString();
                     Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
@@ -112,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = IdText.getText().toString().trim();
+                String email = emailEdit.getText().toString().trim();
                 String password = password_edit.getText().toString().trim();
 
                 if(email.isEmpty() ){

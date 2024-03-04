@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp">
-
+<!-- this is lior's made shift item-->
     <TextView
         android:id="@+id/shiftDateTextView"
         android:layout_width="wrap_content"

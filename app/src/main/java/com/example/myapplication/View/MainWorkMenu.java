@@ -21,11 +21,14 @@ import android.widget.TextView;
 import com.example.myapplication.Model.Database;
 import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Locale;
 
 public class MainWorkMenu extends AppCompatActivity {
 
+    private static final int REQUEST_CODE_SALARY = 1;
     private BroadcastReceiver broadcastReceiver;
     private Database database = new Database();
 
@@ -54,6 +57,22 @@ public class MainWorkMenu extends AppCompatActivity {
         );
 
 
+
+        Intent intent = new Intent(MainWorkMenu.this, SalaryActivity.class);
+        salaryActivityResultLauncher.launch(intent);
+        salaryActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            double salary = data.getDoubleExtra("salary", 0.0);
+                            TextView salaryTextView = findViewById(R.id.salaryTextView);
+                            salaryTextView.setText(String.format(Locale.getDefault(), "Salary: $%.2f", salary));
+                        }
+                    }
+                }
+        );
 
 
         // Button declarations and onClickListeners
@@ -123,14 +142,6 @@ public class MainWorkMenu extends AppCompatActivity {
             }
         });
 
-        Button startCalcBtn = findViewById(R.id.stcaBtn);
-        startCalcBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainWorkMenu.this, SalaryActivity.class);
-                salaryActivityResultLauncher.launch(intent);
-            }
-        });
 
 
         Button monthlyCalcBtn = findViewById(R.id.monthlyCalcBtn);
@@ -154,6 +165,19 @@ public class MainWorkMenu extends AppCompatActivity {
 
 // Set the text of the hourlySalaryTextView
         fetchHourlySalary();
+
+
+
+        BroadcastReceiver breakEndReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // Write the end of the break to the database
+                writeBreakEndToDatabase();
+                // Start the BreaksActivity to display the updated breaks list
+                startActivity(new Intent(MainWorkMenu.this, BreaksActivity.class));
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(breakEndReceiver, new IntentFilter("BREAK_END"));
     }
 
     private void fetchHourlySalary() {
@@ -200,6 +224,20 @@ public class MainWorkMenu extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    // In MainWorkMenu.java
+    private void writeBreakEndToDatabase() {
+        // Write the end of the break to the database
+        // You can use Firestore or any other database you are using
+        // For example:
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore.getInstance()
+                .collection("breaks")
+                .document(userId)
+                .update("end_time", FieldValue.serverTimestamp())
+                .addOnSuccessListener(aVoid -> Log.d("Database", "Break end written to database"))
+                .addOnFailureListener(e -> Log.e("Database", "Error writing break end to database: " + e.getMessage()));
     }
 
 }

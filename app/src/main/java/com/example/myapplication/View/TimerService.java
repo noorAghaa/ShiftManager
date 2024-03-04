@@ -5,19 +5,14 @@ import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.util.Log;
+import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-
-
-import androidx.annotation.Nullable;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
-import java.util.Locale;
 
 public class TimerService extends Service {
 
@@ -33,7 +28,9 @@ public class TimerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        startTimer(30 *60* 1000); // Start a 30-minute timer
+        // Get the duration of the break from the intent (default to 30 minutes)
+        long duration = intent.getLongExtra("duration", 60 * 1000);
+        startTimer(duration); // Start the timer with the specified duration
         return START_STICKY;
     }
 
@@ -59,45 +56,47 @@ public class TimerService extends Service {
 
             public void onFinish() {
                 // Timer finished, handle accordingly
-                sendBreakToFirestore();
+                endBreakAndWriteToFirestore();
             }
         }.start();
         Log.d("TimerService", "Countdown timer started"); // Log countdown timer started
     }
 
-
-    private void sendBreakToFirestore() {
-        // Get current user ID (You need to implement this according to your authentication system)
+    private void endBreakAndWriteToFirestore() {
+        // Get current user ID
         String userId = getCurrentUserId();
 
         // Get current date
         Date currentDate = new Date();
 
         // Calculate the duration based on the starting time and current time
-        long duration = System.currentTimeMillis() - startTimeMillis; // Assuming startTimeMillis is the time when the break started
+        long duration = System.currentTimeMillis() - startTimeMillis;
 
         // Create a Firestore instance
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Create a new break document with user ID, date, and duration
+        // Create a new break document with user ID, start and end time, and duration
         Map<String, Object> breakData = new HashMap<>();
         breakData.put("userId", userId);
-        breakData.put("date", currentDate);
-        breakData.put("duration in minutes", duration/1000/60);
-        // Add the break document to the "Breaks" collection
-        db.collection("Breaks")
+        breakData.put("start_time", new Date(startTimeMillis));
+        breakData.put("end_time", currentDate);
+        breakData.put("duration_in_minutes", duration / 1000 / 60);
+
+        // Add the break document to the "breaks" collection
+        db.collection("breaks")
                 .add(breakData)
                 .addOnSuccessListener(documentReference -> {
                     Log.d("TimerService", "Break added to Firestore: " + documentReference.getId());
+                    // Send a broadcast to indicate that the break has ended and been written to Firestore
+                    Intent intent = new Intent("BREAK_END");
+                    LocalBroadcastManager.getInstance(TimerService.this).sendBroadcast(intent);
                 })
                 .addOnFailureListener(e -> {
                     Log.e("TimerService", "Error adding break to Firestore", e);
                 });
     }
 
-
-
-    public String getCurrentUserId() {
+    private String getCurrentUserId() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
@@ -106,5 +105,4 @@ public class TimerService extends Service {
             return null; // User is not logged in
         }
     }
-
 }

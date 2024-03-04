@@ -48,6 +48,15 @@
         android:text="Total Hours Worked:"
         android:textAppearance="?android:textAppearanceMedium" />
 
-
+    <TextView
+        android:id="@+id/hourlySalaryTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/totalHoursWorkedTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="hourly salary:"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
 
 </RelativeLayout>

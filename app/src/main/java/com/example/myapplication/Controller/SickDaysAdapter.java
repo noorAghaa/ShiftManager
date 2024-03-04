@@ -7,16 +7,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.Model.SickDay;
 import com.example.myapplication.R;
 
 import java.util.List;
 
 public class SickDaysAdapter extends RecyclerView.Adapter<SickDaysAdapter.ViewHolder> {
 
-    private List<String> sickDaysList;
+    private List<SickDay> sickDaysList;
 
     // Constructor to initialize the dataset
-    public SickDaysAdapter(List<String> sickDaysList) {
+    public SickDaysAdapter(List<SickDay> sickDaysList) {
         this.sickDaysList = sickDaysList;
     }
 
@@ -32,8 +33,14 @@ public class SickDaysAdapter extends RecyclerView.Adapter<SickDaysAdapter.ViewHo
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String sickDay = sickDaysList.get(position);
-        holder.sickDayTextView.setText(sickDay);
+        SickDay sickDay = sickDaysList.get(position);
+        holder.dateTextView.setText(sickDay.getDate());
+        holder.reasonTextView.setVisibility(View.GONE); // Initially hide the reason
+        holder.itemView.setOnClickListener(view -> {
+            // Toggle the visibility of the reason text view when the date is clicked
+            holder.reasonTextView.setVisibility(holder.reasonTextView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+        });
+        holder.reasonTextView.setText(sickDay.getReason()); // Set the reason text
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -44,11 +51,13 @@ public class SickDaysAdapter extends RecyclerView.Adapter<SickDaysAdapter.ViewHo
 
     // Provide a reference to the views for each data item
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView sickDayTextView;
+        public TextView dateTextView;
+        public TextView reasonTextView;
 
         public ViewHolder(View view) {
             super(view);
-            sickDayTextView = view.findViewById(R.id.textView_sick_day);
+            dateTextView = view.findViewById(R.id.textView_date);
+            reasonTextView = view.findViewById(R.id.textView_reason);
         }
     }
 }

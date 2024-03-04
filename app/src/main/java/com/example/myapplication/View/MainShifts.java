@@ -1,30 +1,30 @@
 package com.example.myapplication.View;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.NumberPicker;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.Controller.ShiftAdapter;
 import com.example.myapplication.Model.Database;
 import com.example.myapplication.Model.Shift;
 import com.example.myapplication.R;
-import com.example.myapplication.Controller.ShiftAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 public class MainShifts extends AppCompatActivity {
-    TextView etMonthYear;
-    private ShiftAdapter adapter;
     private final List<Shift> allShifts = new ArrayList<>();
+    private ShiftAdapter adapter;
     private Button selectDateButton;
     private Database database;
 
@@ -57,6 +57,7 @@ public class MainShifts extends AppCompatActivity {
         selectDateButton.setOnClickListener(v -> showMonthYearPickerDialog());
     }
 
+    @SuppressLint("SetTextI18n")
     private void showMonthYearPickerDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_year_month_picker);
@@ -65,7 +66,6 @@ public class MainShifts extends AppCompatActivity {
         final NumberPicker monthPicker = dialog.findViewById(R.id.monthPicker);
         final NumberPicker yearPicker = dialog.findViewById(R.id.yearPicker);
         Button buttonSet = dialog.findViewById(R.id.okButton);
-        Button selectDateBtn = dialog.findViewById(R.id.selectDateButton);
 
         // Set month values
         monthPicker.setMinValue(1);
@@ -86,20 +86,19 @@ public class MainShifts extends AppCompatActivity {
             int selectedMonth = monthPicker.getValue();
 
             selectDateButton.setText(new DateFormatSymbols().getMonths()[selectedMonth - 1] + " " + selectedYear);
-            filterShiftsByYearAndMonth(selectedYear,selectedMonth);
+            filterShiftsByYearAndMonth(selectedYear, selectedMonth);
         });
 
         dialog.show();
     }
 
     private void fetchShifts() {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         database.fetchShifts(userId, new Database.ShiftDataCallback() {
             @Override
             public void onShiftDataFetched(List<Shift> shifts) {
                 allShifts.clear();
                 allShifts.addAll(shifts);
-                // Optionally call filterShiftsByYearAndMonth here with a default or current year and month
             }
 
             @Override
@@ -115,7 +114,6 @@ public class MainShifts extends AppCompatActivity {
             public void onShiftDataFetched(List<Shift> shifts) {
                 allShifts.clear();
                 allShifts.addAll(shifts);
-                // Optionally call filterShiftsByYearAndMonth here with a default or current year and month
             }
 
             @Override

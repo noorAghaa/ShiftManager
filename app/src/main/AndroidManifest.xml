@@ -70,6 +70,9 @@
             android:name=".View.ViewEmployeesActivity"
             android:exported="false" />
         <activity
+            android:name=".View.SetCompanyDetails"
+            android:exported="false" />
+        <activity
             android:name=".View.MainActivity"
             android:exported="true">
             <intent-filter>

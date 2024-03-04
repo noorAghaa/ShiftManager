@@ -21,7 +21,7 @@
     <string name="LastName">Last Name</string>
     <string name="password">Password</string>
     <string name="create_account">Create Account</string>
-    <string name="already_an_user_login">Already have Account?</string>
+    <string name="already_an_user_login">Already have an Account?</string>
     <string name="title_activity_employee">EmployeeActivity</string>
     <string name="phoneNumber">Phone Number</string>
     <string name="title_activity_forgot_password">ForgotPassword</string>

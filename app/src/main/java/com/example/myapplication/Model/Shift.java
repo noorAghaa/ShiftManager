@@ -52,7 +52,6 @@ public class Shift {
         }
     }
 
-
     public String calculateDuration() {
         String[] myShiftDuration = duration.split(" - ");
         String startTime = myShiftDuration[0];

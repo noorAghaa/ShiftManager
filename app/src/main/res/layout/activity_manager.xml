@@ -8,6 +8,17 @@
     android:orientation="vertical"
     tools:context=".View.ManagerActivity">
 
+    <TextView
+        android:id="@+id/managerDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hello Manager"
+        android:gravity="center_horizontal"
+        android:padding="8dp"
+        android:textSize="18sp"
+        android:textColor="@android:color/black" />
+
+
     <Button
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
@@ -48,6 +59,16 @@
                 android:layout_marginTop="16dp"
                 android:backgroundTint="@color/purple_500"
                 android:text="View Employees"
+                android:textSize="18sp"
+                app:cornerRadius="20dp" />
+
+            <Button
+                android:id="@+id/companyDetails"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/purple_500"
+                android:text="Set Company Details"
                 android:textSize="18sp"
                 app:cornerRadius="20dp" />
 

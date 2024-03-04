@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 
 import com.example.myapplication.Controller.AuthCallBack;
 import com.example.myapplication.Controller.UserCallBack;
-import com.example.myapplication.Controller.UsersCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -22,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,13 +40,15 @@ public class Database {
 
   //  private int month; // Declare month as a class-level variable
 
-
-
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-
     private AuthCallBack authCallBack;
     private UserCallBack userCallBack;
+
+    private String companyAddress;
+    private String companyName;
+    private String companyPhone;
+    private String companyWebsite;
 
     public Database(){
         mAuth = FirebaseAuth.getInstance();
@@ -73,7 +75,6 @@ public class Database {
                 });
     }
 
-
     public void createAccount(String email, String password, User userData) {
         this.mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -96,7 +97,6 @@ public class Database {
                                             if (documentSnapshot.exists()) {
                                                 String managerId = documentSnapshot.getString("managerId");
                                                 String salary = documentSnapshot.getString("salary");
-
 
                                                 // Add employee to their manager's list
                                                 addEmployeeToManagerList(userId, managerId);
@@ -133,6 +133,7 @@ public class Database {
                     }
                 });
     }
+
     private void addEmployeeToManagerList(String userId, String managerId) {
         db.collection(MANAGERS_TABLE).document(managerId)
                 .update("employeeIds", FieldValue.arrayUnion(userId))
@@ -148,8 +149,6 @@ public class Database {
                 .addOnSuccessListener(aVoid -> Log.d("Database", "Salary for user " + userId + " added successfully"))
                 .addOnFailureListener(e -> Log.e("Database", "Error adding salary for user " + userId, e));
     }
-
-
 
     private void addManagerWithNoEmployees(String managerId) {
         // Create a new manager document with an empty list of employee IDs
@@ -186,14 +185,11 @@ public class Database {
         }
     }
 
-
     public void removePreApprovedEmail(String email, PreApprovedEmailCallback callback) {
         db.collection(PRE_APPROVED_EMAILS_TABLE).document(email).delete()
                 .addOnSuccessListener(aVoid -> callback.onSuccess())
                 .addOnFailureListener(callback::onFailure);
     }
-
-
 
 //    public void createAccountWithPhoneNumber(SignupActivity activity, String phoneNumber, String password, User userData) {
 //        FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -229,7 +225,6 @@ public class Database {
 //
 //        PhoneAuthProvider.verifyPhoneNumber(options);
 //    }
-
 
     public void saveUserData(User user){
         this.db.collection(USERS_TABLE).document(user.getKey()).set(user)
@@ -318,6 +313,58 @@ public class Database {
                 });
     }
 
+    public void addCompanyDetails(String name, String address, String phone, String website, String managerId, SetCompanyDetailsCallback callback) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("companyName", name);
+        data.put("companyAddress", address);
+        data.put("companyPhone", phone);
+        data.put("companyWebsite", website);
+
+        db.collection(MANAGERS_TABLE).document(managerId).set(data, SetOptions.merge())
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(callback::onFailure);
+    }
+
+    public void fetchCompanyInfo(String managerId, CompanyInfoCallback callback) {
+        db.collection(MANAGERS_TABLE).document(managerId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Document was found, extract the data
+                        String companyAddress = document.getString("companyAddress");
+                        String companyName = document.getString("companyName");
+                        String companyPhone = document.getString("companyPhone");
+                        String companyWebsite = document.getString("companyWebsite");
+
+                        // Construct the result string
+                        String companyInfo = "Company Address: " + companyAddress + "\nCompany Name: " + companyName + "\nCompany Phone: " + companyPhone + "\nCompany Website: " + companyWebsite;
+
+                        // Use the callback to return the data
+                        callback.onCallback(companyInfo);
+                    } else {
+                        // Document does not exist, use the callback to handle the error
+                        callback.onError("No such document");
+                    }
+                } else {
+                    // Task failed with an exception, use the callback to handle the error
+                    callback.onError("get failed with " + task.getException());
+                }
+            }
+        });
+    }
+
+    public interface CompanyInfoCallback {
+        void onCallback(String companyInfo);
+        void onError(String message);
+    }
+
+    public interface SetCompanyDetailsCallback {
+        void onSuccess();
+        void onFailure(@NonNull Exception e);
+    }
+
     public interface ShiftDataCallback {
         void onShiftDataFetched(List<Shift> shifts);
         void onError(Exception e);
@@ -353,28 +400,10 @@ public class Database {
                 .addOnFailureListener(callback::onFailure);
     }
 
-    public void fetchEmployeesUnderManager(String managerId, UsersCallback callback) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("Managers")
-                .whereEqualTo("managerId", managerId)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<User> employees = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        User employee = document.toObject(User.class);
-                        employees.add(employee);
-                    }
-                    callback.onUsersFetchDataComplete(employees);
-                })
-                .addOnFailureListener(e -> callback.onError(e));
-    }
-
-
     public interface PreApprovedEmailCallback {
         void onSuccess();
         void onFailure(@NonNull Exception e);
     }
-
 
     public void fetchSalary(String userId, SalaryFetchCallback callback) {
         db.collection("Salaries").document(userId).get()
@@ -395,13 +424,10 @@ public class Database {
                 });
     }
 
-
-
     public interface SalaryFetchCallback {
         void onSalaryFetch(String hourlySalary);
         void onError(Exception e);
     }
-
 
     public void checkUserIdExists(String userId, UserIdCheckCallback callback) {
         db.collection(USERS_TABLE).document(userId).get()
@@ -424,7 +450,6 @@ public class Database {
         void onUserIdExists(boolean exists);
         void onFailure(Exception e);
     }
-
 
     public void checkUserExists(String email, final UserExistsCallback callback) {
         db.collection(USERS_TABLE)
@@ -501,12 +526,4 @@ public class Database {
         void onSuccess();
         void onFailure(Exception e);
     }
-
-
 }
-
-
-
-
-
-

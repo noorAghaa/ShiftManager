@@ -15,7 +15,6 @@ public class User extends FirebaseKey implements Serializable {
     private int account_type;
     private String imagePath;
     private String imageUrl;
-
     private String myId;
 
     public void setMyId(String setId){ this.myId = setId; }
@@ -82,7 +81,6 @@ public class User extends FirebaseKey implements Serializable {
 
     public  void setAccount_type(int account_type){this.account_type = account_type;}
 
-
     public User(){this.account_type = 0;}
 
     @Exclude
@@ -93,8 +91,6 @@ public class User extends FirebaseKey implements Serializable {
         if(this.password == null || this.password.isEmpty()) return false;
         return this.phoneNumber != null && !this.phoneNumber.isEmpty();
     }
-
-
 
     public String getKey(){return key;}
 

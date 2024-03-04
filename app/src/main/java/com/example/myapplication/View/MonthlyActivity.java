@@ -181,9 +181,15 @@ public class MonthlyActivity extends AppCompatActivity {
         int endHours = Integer.parseInt(endParts[0]);
         int endMinutes = Integer.parseInt(endParts[1]);
 
-        // Calculate total minutes for start and end times
+        // Convert start and end times to total minutes
         int totalStartMinutes = startHours * 60 + startMinutes;
         int totalEndMinutes = endHours * 60 + endMinutes;
+
+        // Check if end time is before start time (indicating overnight work)
+        if (totalEndMinutes < totalStartMinutes) {
+            // Add 24 hours to end time to represent the next day
+            totalEndMinutes += 24 * 60;
+        }
 
         // Calculate difference in minutes
         int totalMinutes = totalEndMinutes - totalStartMinutes;

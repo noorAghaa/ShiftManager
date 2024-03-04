@@ -49,8 +49,10 @@ public class SalaryActivity extends AppCompatActivity {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Declare totalHoursWorked and extraHoursWorked as final
+        // Declare total hours worked, regular hours, and extra hours as final
         final double[] totalHoursWorked = {0}; // Initialize as an array to make it mutable
-        final double[] extraHoursWorked = {0}; // Initialize as an array to make it mutable
+        final double[] regularHours = {0};
+        final double[] extraHours = {0};
 
         // Query Firestore to retrieve shifts for the current user
         database.fetchShifts(userId, new Database.ShiftDataCallback() {
@@ -80,9 +82,12 @@ public class SalaryActivity extends AppCompatActivity {
                         double hoursWorked = calculateHoursWorked(startTime, endTime);
                         totalHoursWorked[0] += hoursWorked;
 
-                        // Check if the hours worked exceed the regular working hours
-                        if (hoursWorked > REGULAR_WORKING_HOURS_PER_DAY) {
-                            extraHoursWorked[0] += hoursWorked - REGULAR_WORKING_HOURS_PER_DAY;
+                        // Check if the hours worked exceed regular working hours
+                        if (hoursWorked <= REGULAR_WORKING_HOURS_PER_DAY) {
+                            regularHours[0] += hoursWorked;
+                        } else {
+                            extraHours[0] += hoursWorked - REGULAR_WORKING_HOURS_PER_DAY;
+                            regularHours[0] += REGULAR_WORKING_HOURS_PER_DAY;
                         }
                     }
                 }
@@ -92,9 +97,11 @@ public class SalaryActivity extends AppCompatActivity {
                     @Override
                     public void onSalaryFetch(String hourlySalary) {
                         // Calculate salary based on total hours worked, including extra hours
-                        double regularSalary = Math.min(totalHoursWorked[0], REGULAR_WORKING_HOURS_PER_DAY) * Double.parseDouble(hourlySalary);
-                        double extraHoursSalary = extraHoursWorked[0] * Double.parseDouble(hourlySalary) * EXTRA_HOURS_MULTIPLIER;
-                        double totalSalary = regularSalary + extraHoursSalary;
+                        double regularSalary = regularHours[0] * Double.parseDouble(hourlySalary);
+
+                        // Calculate salary for extra hours with extra multiplier
+                        double extraSalary = extraHours[0] * Double.parseDouble(hourlySalary) * EXTRA_HOURS_MULTIPLIER;
+                        double totalSalary= extraSalary+regularSalary;
 
                         // Pass the salary back to the calling activity
                         Intent resultIntent = new Intent();
@@ -139,9 +146,15 @@ public class SalaryActivity extends AppCompatActivity {
         int endHours = Integer.parseInt(endParts[0]);
         int endMinutes = Integer.parseInt(endParts[1]);
 
-        // Calculate total minutes for start and end times
+        // Convert start and end times to total minutes
         int totalStartMinutes = startHours * 60 + startMinutes;
         int totalEndMinutes = endHours * 60 + endMinutes;
+
+        // Check if end time is before start time (indicating overnight work)
+        if (totalEndMinutes < totalStartMinutes) {
+            // Add 24 hours to end time to represent the next day
+            totalEndMinutes += 24 * 60;
+        }
 
         // Calculate difference in minutes
         int totalMinutes = totalEndMinutes - totalStartMinutes;

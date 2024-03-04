@@ -3,6 +3,7 @@ package com.example.myapplication.Model;
 import com.example.myapplication.Controller.DateUtil;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -62,13 +63,20 @@ public class Shift {
         if (start == null || end == null) {
             return "Duration not available"; // Handle null start or end times gracefully
         }
-        // Continue with duration calculation as before
+
+        // Assume both times are within the same day initially
         long durationMillis = end.getTime() - start.getTime();
+
+        // If the calculated duration is negative, the end time is on the next day
+        if (durationMillis < 0) {
+            // Add 24 hours worth of milliseconds to the duration to account for the next day
+            durationMillis += 24 * 60 * 60 * 1000;
+        }
+
         long hours = durationMillis / (1000 * 60 * 60);
         long minutes = (durationMillis / (1000 * 60)) % 60;
         return String.format(Locale.getDefault(), "%dh %dm", hours, minutes);
     }
-
 
     // Getters (and setters if necessary)
     public String getDay() { return day; }
@@ -86,6 +94,7 @@ public class Shift {
 
         // Calculate duration in milliseconds
         long durationInMillis = endTime.getTime() - startTime.getTime();
+
 
         // Convert milliseconds to hours
         return durationInMillis / (1000.0 * 60.0 * 60.0);

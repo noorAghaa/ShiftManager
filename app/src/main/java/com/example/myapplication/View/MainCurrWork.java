@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
+import android.widget.Toast;
+
 import com.example.myapplication.Model.Database;
 import com.example.myapplication.Model.Shift;
 import com.example.myapplication.R;
@@ -13,6 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -70,19 +74,56 @@ public class MainCurrWork extends AppCompatActivity {
 
     private void endShift() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null && end_Time_Date == null) {
-            end_Time_Date = getCurrentTime();
-        }
+        if (currentUser != null && end_Time_Date != null) {
+            String userId = currentUser.getUid();
 
+            // First, fetch existing shifts
+            database.fetchShifts(userId, new Database.ShiftDataCallback() {
+                @Override
+                public void onShiftDataFetched(List<Shift> shifts) {
+                    // Then, check if the new shift overlaps
+                    if (!doesShiftOverlap(start_Time_Date, end_Time_Date, shifts)) {
+                        // No overlap, proceed to save the new shift
+                        saveNewShift(userId);
+                    } else {
+                        // Handle overlap case
+                        runOnUiThread(() -> Toast.makeText(MainCurrWork.this, "Shift overlaps with an existing shift.", Toast.LENGTH_SHORT).show());
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("MainCurrWork", "Failed to fetch shifts", e);
+                }
+            });
+        }
+    }
+
+    private boolean doesShiftOverlap(Date newStart, Date newEnd, List<Shift> existingShifts) {
+        Log.d("OverlapCheck", "Checking new shift: " + newStart + " to " + newEnd);
+        for (Shift existingShift : existingShifts) {
+            Date existingStart = existingShift.getStart_date();
+            Date existingEnd = existingShift.getEnd_date();
+            Log.d("OverlapCheck", "Against existing shift: " + existingStart + " to " + existingEnd);
+            if (newStart.before(existingEnd) && newEnd.after(existingStart)) {
+                Log.d("OverlapCheck", "Overlap found.");
+                return true; // Overlap found
+            }
+        }
+        Log.d("OverlapCheck", "No overlap found.");
+        return false; // No overlap
+    }
+
+    private void saveNewShift(String userId) {
         String day = new SimpleDateFormat("EEEE", Locale.getDefault()).format(start_Time_Date);
         String duration = formatTime(start_Time_Date) + " - " + formatTime(end_Time_Date);
-        String userId = currentUser.getUid();
 
         Shift shift = new Shift(day, start_Time_Date, duration, userId, end_Time_Date);
         database.saveShiftData(shift);
 
         navigateToPreMain();
     }
+
 
     private void navigateToPreMain() {
         Intent goToPreMain = new Intent(MainCurrWork.this, MainPreWork.class);

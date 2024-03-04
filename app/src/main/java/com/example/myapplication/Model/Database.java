@@ -45,11 +45,6 @@ public class Database {
     private AuthCallBack authCallBack;
     private UserCallBack userCallBack;
 
-    private String companyAddress;
-    private String companyName;
-    private String companyPhone;
-    private String companyWebsite;
-
     public Database(){
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();

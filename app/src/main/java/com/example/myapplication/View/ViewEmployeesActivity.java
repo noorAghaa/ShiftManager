@@ -3,6 +3,8 @@ package com.example.myapplication.View;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +27,7 @@ public class ViewEmployeesActivity extends AppCompatActivity {
     private EmployeesAdapter adapter;
     private ArrayList<User> employeesList = new ArrayList<>();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private TextView tvNoEmployees; // TextView for showing the no employees message
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +35,12 @@ public class ViewEmployeesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_employees);
 
         employeesRecyclerView = findViewById(R.id.employeesRecyclerView);
+        tvNoEmployees = findViewById(R.id.tvNoEmployees); // Initialize the TextView
         employeesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new EmployeesAdapter(this, employeesList, new EmployeesAdapter.OnEmployeeClickListener() {
-            @Override
-            public void onEmployeeClicked(String userId) {
-                Intent intent = new Intent(ViewEmployeesActivity.this, MainShifts.class);
-                intent.putExtra("EXTRA_EMPLOYEE_ID", userId);
-                startActivity(intent);
-            }
+        adapter = new EmployeesAdapter(this, employeesList, userId -> {
+            Intent intent = new Intent(ViewEmployeesActivity.this, MainShifts.class);
+            intent.putExtra("EXTRA_EMPLOYEE_ID", userId);
+            startActivity(intent);
         });
 
         employeesRecyclerView.setAdapter(adapter);
@@ -52,15 +53,20 @@ public class ViewEmployeesActivity extends AppCompatActivity {
         db.collection("Managers").document(managerId).get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 List<String> employeeIds = (List<String>) documentSnapshot.get("employeeIds");
-                if (employeeIds != null) {
+                if (employeeIds != null && !employeeIds.isEmpty()) {
                     fetchEmployeeDetails(employeeIds);
                 } else {
                     Log.e("ViewEmployeesActivity", "No employees found for manager.");
+                    tvNoEmployees.setVisibility(View.VISIBLE); // Show the message
                 }
             } else {
                 Log.e("ViewEmployeesActivity", "Manager document does not exist.");
+                tvNoEmployees.setVisibility(View.VISIBLE); // Show the message
             }
-        }).addOnFailureListener(e -> Toast.makeText(ViewEmployeesActivity.this, "Error fetching employees.", Toast.LENGTH_SHORT).show());
+        }).addOnFailureListener(e -> {
+            Toast.makeText(ViewEmployeesActivity.this, "Error fetching employees.", Toast.LENGTH_SHORT).show();
+            tvNoEmployees.setVisibility(View.VISIBLE); // Show the message in case of failure too
+        });
     }
 
     private void fetchEmployeeDetails(List<String> employeeIds) {
@@ -75,15 +81,24 @@ public class ViewEmployeesActivity extends AppCompatActivity {
                     employees.add(employee);
                 }
                 if (counter.decrementAndGet() == 0) {
-                    adapter.updateData(employees);
+                    if (employees.isEmpty()) {
+                        tvNoEmployees.setVisibility(View.VISIBLE); // Show message if no employees were successfully fetched
+                    } else {
+                        tvNoEmployees.setVisibility(View.GONE); // Hide message
+                        adapter.updateData(employees);
+                    }
                 }
             }).addOnFailureListener(e -> {
                 if (counter.decrementAndGet() == 0) {
-                    adapter.updateData(employees);
+                    if (employees.isEmpty()) {
+                        tvNoEmployees.setVisibility(View.VISIBLE); // Show message if no employees were successfully fetched
+                    } else {
+                        tvNoEmployees.setVisibility(View.GONE); // Hide message
+                        adapter.updateData(employees);
+                    }
                 }
             });
         }
     }
-
-
 }
+

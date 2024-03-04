@@ -424,6 +424,25 @@ public class Database {
                 });
     }
 
+    public void fetch_Salary(String userId, SalaryFetchCallback callback) {
+        db.collection("Salaries").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String hourlySalary = documentSnapshot.getString("salary");
+                        if (hourlySalary != null) {
+                            callback.onSalaryFetch(hourlySalary);
+                        } else {
+                            callback.onError(new NullPointerException("Hourly salary is null"));
+                        }
+                    } else {
+                        callback.onError(new NullPointerException("Document does not exist"));
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    callback.onError(e);
+                });
+    }
+
     public interface SalaryFetchCallback {
         void onSalaryFetch(String hourlySalary);
         void onError(Exception e);
@@ -515,12 +534,13 @@ public class Database {
         Map<String, Object> salaryUpdate = new HashMap<>();
         salaryUpdate.put("salary", newSalary); // Assuming 'salary' is the field name in your Firestore collection
 
-        db.collection("Employees") // Assuming 'Employees' is the collection where salaries are stored
+        db.collection("Salaries") // Correcting the collection name to 'Salaries'
                 .document(userId)
-                .update(salaryUpdate)
+                .set(salaryUpdate) // Use .set() to overwrite the document or create it if it doesn't exist
                 .addOnSuccessListener(aVoid -> callback.onSuccess())
                 .addOnFailureListener(e -> callback.onFailure(e));
     }
+
 
     public interface SalaryUpdateCallback {
         void onSuccess();

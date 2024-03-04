@@ -95,4 +95,5 @@ public class User extends FirebaseKey implements Serializable {
     public String getKey(){return key;}
 
     public void setKeyOn(String key){this.key= key;}
+
 }

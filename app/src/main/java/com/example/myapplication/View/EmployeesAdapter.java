@@ -1,7 +1,10 @@
 package com.example.myapplication.View;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,53 +57,30 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.Empl
         String fullName = employee.getFirstname() + " " + employee.getLastname();
         holder.nameTextView.setText(fullName);
 
-        holder.viewSalaryButton.setOnClickListener(v -> {
-            final Database db = new Database();
-            // Define an array to hold the current salary, allowing it to be final yet mutable
-            final String[] currentSalary = new String[1];
-
-            db.fetchSalary(employee.getMyId(), new Database.SalaryFetchCallback() {
-                @Override
-                public void onSalaryFetch(String hourlySalary) {
-                    // Update currentSalary[0] with the fetched salary
-                    currentSalary[0] = hourlySalary;
-                    // Creating EditText dynamically to input new salary
-                    final EditText salaryInput = new EditText(context);
-                    salaryInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                    salaryInput.setHint("Enter new salary");
-
-                    // Preparing and showing the AlertDialog
-                    new AlertDialog.Builder(context)
-                            .setTitle("Update Salary")
-                            .setMessage("Current Salary: " + currentSalary[0])
-                            .setView(salaryInput) // Adding EditText to AlertDialog
-                            .setPositiveButton("Update", (dialog, which) -> {
-                                String newSalary = salaryInput.getText().toString();
-                                // Implement the logic to update the salary in the database
-                                db.updateSalary(employee.getMyId(), newSalary, new Database.SalaryUpdateCallback() {
-                                    @Override
-                                    public void onSuccess() {
-                                        // Update the local currentSalary variable with the new salary
-                                        currentSalary[0] = newSalary;
-                                        Toast.makeText(context, "Salary updated successfully.", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                    @Override
-                                    public void onFailure(Exception e) {
-                                        Toast.makeText(context, "Failed to update salary.", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            })
-                            .setNegativeButton("Cancel", null)
-                            .show();
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    Toast.makeText(context, "Error fetching salary: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
+        // Check if there's an updated salary in the map
+        String updatedSalary = updatedSalaries.get(employee.getMyId());
+        if (updatedSalary != null) {
+            // If there's an updated salary, use it directly without fetching
+            holder.viewSalaryButton.setOnClickListener(v -> {
+                showUpdateSalaryDialog(employee, updatedSalary);
             });
-        });
+        } else {
+            // If there's no updated salary in the map, fetch from the database
+            holder.viewSalaryButton.setOnClickListener(v -> {
+                final Database db = new Database();
+                db.fetch_Salary(employee.getMyId(), new Database.SalaryFetchCallback() {
+                    @Override
+                    public void onSalaryFetch(String hourlySalary) {
+                        showUpdateSalaryDialog(employee, hourlySalary);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Toast.makeText(context, "Error fetching salary: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        }
 
 
 
@@ -116,6 +96,37 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.Empl
 
     }
 
+    private void showUpdateSalaryDialog(User employee, String currentSalary) {
+        // Creating EditText dynamically to input new salary
+        final EditText salaryInput = new EditText(context);
+        salaryInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        salaryInput.setHint("Enter new salary");
+
+        // Preparing and showing the AlertDialog
+        new AlertDialog.Builder(context)
+                .setTitle("Update Salary")
+                .setMessage("Current Salary: " + currentSalary)
+                .setView(salaryInput)
+                .setPositiveButton("Update", (dialog, which) -> {
+                    String newSalary = salaryInput.getText().toString();
+                    final Database db = new Database();
+                    db.updateSalary(employee.getMyId(), newSalary, new Database.SalaryUpdateCallback() {
+                        @Override
+                        public void onSuccess() {
+                            // Store the new salary in the map
+                            updatedSalaries.put(employee.getMyId(), newSalary);
+                            Toast.makeText(context, "Salary updated successfully.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            Toast.makeText(context, "Failed to update salary.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
     @Override
     public int getItemCount() {
         return employeesList.size();

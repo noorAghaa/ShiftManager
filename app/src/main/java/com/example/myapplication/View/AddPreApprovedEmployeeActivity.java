@@ -1,5 +1,6 @@
 package com.example.myapplication.View;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,16 +9,19 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.myapplication.Model.Database;
 import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
 public class AddPreApprovedEmployeeActivity extends AppCompatActivity {
 
     private EditText emailEditText, salaryEditText;
-    private Button addButton;
     private LinearLayout emailsContainer;
     private Database database;
 
@@ -28,7 +32,7 @@ public class AddPreApprovedEmployeeActivity extends AppCompatActivity {
 
         emailEditText = findViewById(R.id.emailEditText);
         salaryEditText = findViewById(R.id.salaryEditText);
-        addButton = findViewById(R.id.addButton);
+        Button addButton = findViewById(R.id.addButton);
         emailsContainer = findViewById(R.id.emailsContainer);
 
         database = new Database();
@@ -39,7 +43,7 @@ public class AddPreApprovedEmployeeActivity extends AppCompatActivity {
                 String email = emailEditText.getText().toString().trim();
                 String salary = salaryEditText.getText().toString().trim();
                 if (isValidEmail(email) && isValidSalary(salary)) {
-                    String managerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    String managerId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
                     database.addPreApprovedEmail(email, salary, managerId, new Database.PreApprovedEmailCallback() {
                         @Override
                         public void onSuccess() {
@@ -74,7 +78,7 @@ public class AddPreApprovedEmployeeActivity extends AppCompatActivity {
     }
 
     private void addEmailToView(String email) {
-        View emailView = getLayoutInflater().inflate(R.layout.email_item, null);
+        @SuppressLint("InflateParams") View emailView = getLayoutInflater().inflate(R.layout.email_item, null);
         TextView emailTextView = emailView.findViewById(R.id.emailTextView);
         ImageButton removeButton = emailView.findViewById(R.id.removeButton);
 
@@ -93,7 +97,6 @@ public class AddPreApprovedEmployeeActivity extends AppCompatActivity {
                 }
             });
         });
-
         emailsContainer.addView(emailView);
     }
 }

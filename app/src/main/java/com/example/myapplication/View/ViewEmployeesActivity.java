@@ -6,24 +6,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.myapplication.View.EmployeesAdapter;
-import com.example.myapplication.Controller.EmployeeIdsCallback;
-import com.example.myapplication.Controller.UsersCallback;
+
 import com.example.myapplication.Model.User;
 import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ViewEmployeesActivity extends AppCompatActivity {
-
-    private RecyclerView employeesRecyclerView;
     private EmployeesAdapter adapter;
     private ArrayList<User> employeesList = new ArrayList<>();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -34,7 +32,7 @@ public class ViewEmployeesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_employees);
 
-        employeesRecyclerView = findViewById(R.id.employeesRecyclerView);
+        RecyclerView employeesRecyclerView = findViewById(R.id.employeesRecyclerView);
         tvNoEmployees = findViewById(R.id.tvNoEmployees); // Initialize the TextView
         employeesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new EmployeesAdapter(this, employeesList, userId -> {
@@ -42,10 +40,9 @@ public class ViewEmployeesActivity extends AppCompatActivity {
             intent.putExtra("EXTRA_EMPLOYEE_ID", userId);
             startActivity(intent);
         });
-
         employeesRecyclerView.setAdapter(adapter);
 
-        String managerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String managerId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         fetchEmployeeIdsForManager(managerId);
     }
 
@@ -101,4 +98,3 @@ public class ViewEmployeesActivity extends AppCompatActivity {
         }
     }
 }
-

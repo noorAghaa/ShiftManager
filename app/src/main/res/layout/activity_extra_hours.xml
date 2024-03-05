@@ -6,7 +6,6 @@
     android:padding="16dp"
     tools:context=".View.ExtraHoursActivity">
 
-    <!-- Add Spinner for month selection -->
     <Spinner
         android:id="@+id/monthSpinner"
         android:layout_width="match_parent"
@@ -14,17 +13,14 @@
         android:layout_marginBottom="8dp"
         android:entries="@array/months_array" />
 
-    <!-- Add Spinner for year selection -->
     <Spinner
         android:id="@+id/yearSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" />
 
-    <!-- RecyclerView for displaying extra hours shifts -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/extraHoursRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
 </LinearLayout>

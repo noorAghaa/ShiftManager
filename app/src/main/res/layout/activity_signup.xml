@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
+    android:orientation="vertical"
     tools:context=".View.SignupActivity">
 
     <androidx.cardview.widget.CardView
@@ -29,10 +28,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_gravity="center_horizontal"
-            android:padding="24dp"
-            android:background="@drawable/purple_border">
+            android:background="@drawable/purple_border"
+            android:orientation="vertical"
+            android:padding="24dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -56,40 +55,40 @@
                 android:textColor="@color/black" />
 
             <EditText
+                android:id="@+id/lastName"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:id="@+id/lastName"
-                android:background="@drawable/purple_border"
                 android:layout_marginTop="20dp"
-                android:padding="8dp"
-                android:hint="@string/LastName"
+                android:background="@drawable/purple_border"
                 android:drawableLeft="@drawable/baseline_person_pin_24"
                 android:drawablePadding="8dp"
-                android:textColor="@color/black"/>
+                android:hint="@string/LastName"
+                android:padding="8dp"
+                android:textColor="@color/black" />
 
             <EditText
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/Id_Number"
-            android:background="@drawable/purple_border"
-            android:layout_marginTop="20dp"
-            android:padding="8dp"
-            android:hint="@string/IdNumber"
-            android:drawableLeft="@drawable/baseline_lock_24"
-            android:drawablePadding="8dp"
-            android:textColor="@color/black"/>
-
-            <EditText
+                android:id="@+id/Id_Number"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:id="@+id/signup_email"
-                android:background="@drawable/purple_border"
                 android:layout_marginTop="20dp"
+                android:background="@drawable/purple_border"
+                android:drawableLeft="@drawable/baseline_lock_24"
+                android:drawablePadding="8dp"
+                android:hint="@string/IdNumber"
                 android:padding="8dp"
-                android:hint="@string/email"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/signup_email"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/purple_border"
                 android:drawableLeft="@drawable/baseline_email"
                 android:drawablePadding="8dp"
-                android:textColor="@color/black"/>
+                android:hint="@string/email"
+                android:padding="8dp"
+                android:textColor="@color/black" />
 
             <EditText
                 android:id="@+id/editTextPhoneNumber"
@@ -97,34 +96,34 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/purple_border"
-                android:padding="8dp"
-                android:hint="Phone Number"
-                android:inputType="phone"
                 android:drawableLeft="@drawable/baseline_person_pin_24"
                 android:drawablePadding="8dp"
-                android:textColor="@color/black"/>
+                android:hint="Phone Number"
+                android:inputType="phone"
+                android:padding="8dp"
+                android:textColor="@color/black" />
 
             <EditText
+                android:id="@+id/signup_password"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:id="@+id/signup_password"
-                android:background="@drawable/purple_border"
                 android:layout_marginTop="20dp"
-                android:padding="8dp"
-                android:hint="@string/password"
-                android:inputType="textPassword"
+                android:background="@drawable/purple_border"
                 android:drawableLeft="@drawable/baseline_lock_24"
                 android:drawablePadding="8dp"
-                android:textColor="@color/black"/>
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:padding="8dp"
+                android:textColor="@color/black" />
 
             <Switch
                 android:id="@+id/switchAccountType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:text="Manager Account?"
                 android:textOff="Employee"
-                android:textOn="Proprietor/Manager"
-                android:text="Manager Account?"/>
+                android:textOn="Proprietor/Manager" />
 
             <Button
                 android:id="@+id/signupButton"
@@ -148,10 +147,7 @@
                 android:padding="8dp"
                 android:text="@string/already_an_user_login"
                 android:textColor="@color/purple"
-                android:textSize="18sp"/>
-
+                android:textSize="18sp" />
         </LinearLayout>
-
     </androidx.cardview.widget.CardView>
-
 </LinearLayout>

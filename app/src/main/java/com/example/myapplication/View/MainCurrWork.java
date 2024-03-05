@@ -1,6 +1,5 @@
 package com.example.myapplication.View;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,11 +7,14 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.myapplication.Model.Database;
 import com.example.myapplication.Model.Shift;
 import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -123,7 +125,6 @@ public class MainCurrWork extends AppCompatActivity {
 
         navigateToPreMain();
     }
-
 
     private void navigateToPreMain() {
         Intent goToPreMain = new Intent(MainCurrWork.this, MainPreWork.class);

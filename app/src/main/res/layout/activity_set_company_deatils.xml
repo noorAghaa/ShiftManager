@@ -1,48 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:name=".View.AddPreApprovedEmployeeActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:name=".View.AddPreApprovedEmployeeActivity"
-
     android:padding="16dp">
-
 
     <EditText
         android:id="@+id/companyNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Company Name" />
+        android:hint="@string/company_name" />
 
     <EditText
         android:id="@+id/companyAddressEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Company Address" />
+        android:hint="@string/company_address" />
 
     <EditText
         android:id="@+id/companyPhoneNumberEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Company Phone Number"
-        android:inputType="numberDecimal" />
+        android:hint="@string/company_phone_number"
+        android:inputType="numberDecimal"
+        tools:ignore="TextFields" />
 
     <EditText
         android:id="@+id/companyWebsiteEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Company Website" />
+        android:hint="@string/company_website" />
 
     <Button
         android:id="@+id/addButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add" />
+        android:text="@string/add" />
 
     <LinearLayout
         android:id="@+id/emailsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" />
-
 </LinearLayout>

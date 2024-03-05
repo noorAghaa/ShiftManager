@@ -1,15 +1,18 @@
 package com.example.myapplication.View;
 
+import android.annotation.SuppressLint;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.Controller.BreaksAdapter;
 import com.example.myapplication.R;
@@ -26,26 +29,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import java.util.ArrayList;
-import java.util.List;
-
 public class BreaksActivity extends AppCompatActivity {
-
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-
     private Spinner monthSpinner;
     private Spinner yearSpinner;
-    private RecyclerView breaksRecyclerView;
     private BreaksAdapter breaksAdapter;
     private List<String> breakDatesList;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +49,7 @@ public class BreaksActivity extends AppCompatActivity {
         // Initialize views
         monthSpinner = findViewById(R.id.monthSpinner);
         yearSpinner = findViewById(R.id.yearSpinner);
-        breaksRecyclerView = findViewById(R.id.breaksRecyclerView);
+        RecyclerView breaksRecyclerView = findViewById(R.id.breaksRecyclerView);
 
         // Initialize RecyclerView
         breaksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -116,6 +106,7 @@ public class BreaksActivity extends AppCompatActivity {
                     .whereLessThanOrEqualTo("start_time", endOfMonth)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @SuppressLint("NotifyDataSetChanged")
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
@@ -139,17 +130,6 @@ public class BreaksActivity extends AppCompatActivity {
                             }
                         }
                     });
-        }
-    }
-
-    private String getUserId() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
-        if (user != null) {
-            return user.getUid();
-        } else {
-            // Handle the case where the user is not logged in
-            return null;
         }
     }
 
@@ -183,6 +163,4 @@ public class BreaksActivity extends AppCompatActivity {
         // Return the timestamp of the last moment of the day
         return calendar.getTimeInMillis();
     }
-
-
 }

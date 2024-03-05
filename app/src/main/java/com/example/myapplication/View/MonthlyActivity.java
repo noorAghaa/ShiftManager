@@ -1,5 +1,6 @@
 package com.example.myapplication.View;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,27 +14,23 @@ import com.example.myapplication.Model.Database;
 import com.example.myapplication.Model.Shift;
 import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MonthlyActivity extends AppCompatActivity {
-
-    private Database database;
-    private Spinner monthSpinner;
     private static final double EXTRA_HOURS_MULTIPLIER = 1.5; // 150% increase for extra hours
     private static final double REGULAR_WORKING_HOURS_PER_DAY = 8; // Assuming 8 hours per day is regular working hours
+    private Database database;
+    private Spinner monthSpinner;
     private TextView monthlySalaryTextView;
     private TextView hourlySalaryTextView;
     private Spinner yearSpinner;
-    private Button calculateSalaryBtn;
-    private FirebaseFirestore firestore;
     private TextView totalHoursWorkedTextView; // Declare total hours worked TextView
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +42,7 @@ public class MonthlyActivity extends AppCompatActivity {
         monthSpinner = findViewById(R.id.monthSpinner);
         yearSpinner = findViewById(R.id.yearSpinner);
         monthlySalaryTextView = findViewById(R.id.monthlySalaryTextView);
-        calculateSalaryBtn = findViewById(R.id.calculateSalaryBtn);
+        Button calculateSalaryBtn = findViewById(R.id.calculateSalaryBtn);
         totalHoursWorkedTextView = findViewById(R.id.totalHoursWorkedTextView); // Initialize total hours worked TextView
         hourlySalaryTextView = findViewById(R.id.hourlySalaryTextView); // Initialize hourly salary TextView
 
@@ -73,7 +70,6 @@ public class MonthlyActivity extends AppCompatActivity {
         });
     }
 
-
     // Method to generate a list of years from startYear to endYear
     private List<String> generateYearList(int startYear, int endYear) {
         List<String> years = new ArrayList<>();
@@ -85,14 +81,14 @@ public class MonthlyActivity extends AppCompatActivity {
 
     private void calculateMonthlySalary(int selectedYear, int selectedMonth) {
         // Get current user's ID
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         // Declare total hours worked, regular hours, and extra hours as final
         final double[] totalHoursWorked = {0}; // Initialize as an array to make it mutable
         final double[] regularHours = {0};
         final double[] extraHours = {0};
 
-        // Query Firestore to retrieve shifts for the current user
+        // Query Fire store to retrieve shifts for the current user
         database.fetchShifts(userId, new Database.ShiftDataCallback() {
             @Override
             public void onShiftDataFetched(List<Shift> shifts) {
@@ -123,9 +119,10 @@ public class MonthlyActivity extends AppCompatActivity {
                     }
                 }
 
-                // Fetch hourly salary from Firestore (assuming it's stored for each user)
+                // Fetch hourly salary from Fire store (assuming it's stored for each user)
                 database.fetchSalary(userId, new Database.SalaryFetchCallback() {
 
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onSalaryFetch(String hourlySalary) {
                         // Calculate salary for regular hours
@@ -137,10 +134,10 @@ public class MonthlyActivity extends AppCompatActivity {
                         // Display the calculated monthly salary in the TextView
                         String message = String.format(Locale.getDefault(), "Monthly Salary for %s %d:\n" +
                                         "Regular Hours: %.2f\nRegular Salary: $%.2f\n" +
-                                        "Extra Hours: %.2f\nExtra hours Salary: $%.2f\n"+
+                                        "Extra Hours: %.2f\nExtra hours Salary: $%.2f\n" +
                                         "total salary:%.2f\n",
                                 new DateFormatSymbols().getMonths()[selectedMonth - 1], selectedYear,
-                                regularHours[0], regularSalary, extraHours[0], extraSalary,(extraSalary+regularSalary));
+                                regularHours[0], regularSalary, extraHours[0], extraSalary, (extraSalary + regularSalary));
                         monthlySalaryTextView.setText(message);
 
                         // Set total hours worked
@@ -150,7 +147,6 @@ public class MonthlyActivity extends AppCompatActivity {
                         // Set hourly salary
                         hourlySalaryTextView.setText("hourly salary: $" + hourlySalary);
                     }
-
 
                     @Override
                     public void onError(Exception e) {
@@ -167,8 +163,6 @@ public class MonthlyActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private double calculateHoursWorked(String startTime, String endTime) {
         // Split start time and end time strings to extract hours and minutes
@@ -194,9 +188,6 @@ public class MonthlyActivity extends AppCompatActivity {
         // Calculate difference in minutes
         int totalMinutes = totalEndMinutes - totalStartMinutes;
 
-        // Convert minutes to hours (1 hour = 60 minutes)
-        double hoursWorked = totalMinutes / 60.0;
-
-        return hoursWorked;
+        return totalMinutes / 60.0;
     }
 }

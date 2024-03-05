@@ -1,5 +1,6 @@
 package com.example.myapplication.Controller;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,6 @@ import com.example.myapplication.R;
 import java.util.List;
 
 public class ExtraHoursAdapter extends RecyclerView.Adapter<ExtraHoursAdapter.ExtraHoursViewHolder> {
-
     private List<Shift> shiftList;
     private Context context;
 
@@ -31,6 +31,7 @@ public class ExtraHoursAdapter extends RecyclerView.Adapter<ExtraHoursAdapter.Ex
         return new ExtraHoursViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ExtraHoursViewHolder holder, int position) {
         Shift shift = shiftList.get(position);

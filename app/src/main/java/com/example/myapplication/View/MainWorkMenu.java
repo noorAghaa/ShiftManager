@@ -1,11 +1,6 @@
 package com.example.myapplication.View;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,6 +13,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.example.myapplication.Model.Database;
 import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,10 +25,9 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class MainWorkMenu extends AppCompatActivity {
-
-    private static final int REQUEST_CODE_SALARY = 1;
     private BroadcastReceiver broadcastReceiver;
     private Database database = new Database();
 
@@ -36,6 +35,18 @@ public class MainWorkMenu extends AppCompatActivity {
     private TextView timerTextView;
     private ActivityResultLauncher<Intent> salaryActivityResultLauncher;
 
+    // Helper method to check if a service is running
+    public static boolean isServiceRunning(Class<?> serviceClass, Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +67,6 @@ public class MainWorkMenu extends AppCompatActivity {
                 }
         );
 
-
-
         Intent intent = new Intent(MainWorkMenu.this, SalaryActivity.class);
         salaryActivityResultLauncher.launch(intent);
         salaryActivityResultLauncher = registerForActivityResult(
@@ -74,7 +83,6 @@ public class MainWorkMenu extends AppCompatActivity {
                 }
         );
 
-
         // Button declarations and onClickListeners
         Button exhBtn = findViewById(R.id.exhBtn);
         exhBtn.setOnClickListener(new View.OnClickListener() {
@@ -84,11 +92,6 @@ public class MainWorkMenu extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
-
-
 
         // Initialize the timerTextView
         timerTextView = findViewById(R.id.timerTextView);
@@ -129,10 +132,6 @@ public class MainWorkMenu extends AppCompatActivity {
             }
         });
 
-
-
-
-
         Button sickDaysBtn = findViewById(R.id.sidBtn);
         sickDaysBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,8 +140,6 @@ public class MainWorkMenu extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
 
         Button monthlyCalcBtn = findViewById(R.id.monthlyCalcBtn);
         monthlyCalcBtn.setOnClickListener(new View.OnClickListener() {
@@ -153,20 +150,15 @@ public class MainWorkMenu extends AppCompatActivity {
             }
         });
 
-
         // Find the hourlySalaryTextView in your activity or fragment
         TextView hourlySalaryTextView = findViewById(R.id.hourlySalaryTextView);
 
-/// Find the hourlySalaryTextView in your activity or fragment
-
-// Set the text of the hourlySalaryTextView
+        // Set the text of the hourlySalaryTextView
         hourlySalaryTextView.setText("Current hourly salary: Fetching..."); // Placeholder text until fetched
-        fetchHourlySalary(); // Start fetching the hourly salaryurrent hourly salary
+        fetchHourlySalary(); // Start fetching the hourly salary and Current hourly salary
 
-// Set the text of the hourlySalaryTextView
+        // Set the text of the hourlySalaryTextView
         fetchHourlySalary();
-
-
 
         BroadcastReceiver breakEndReceiver = new BroadcastReceiver() {
             @Override
@@ -199,13 +191,13 @@ public class MainWorkMenu extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateHourlySalaryUI(double hourlySalary) {
         // Find the hourlySalaryTextView in your activity or fragment
         TextView hourlySalaryTextView = findViewById(R.id.hourlySalaryTextView);
         // Set the text of the hourlySalaryTextView
         hourlySalaryTextView.setText("Current hourly salary: $" + hourlySalary);
     }
-
 
     private void updateTimerUI(long remainingTime) {
         long minutes = remainingTime / 60000;
@@ -214,24 +206,12 @@ public class MainWorkMenu extends AppCompatActivity {
         timerTextView.setText(timeLeftFormatted);
     }
 
-
-    // Helper method to check if a service is running
-    public static boolean isServiceRunning(Class<?> serviceClass, Context context) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     // In MainWorkMenu.java
     private void writeBreakEndToDatabase() {
         // Write the end of the break to the database
-        // You can use Firestore or any other database you are using
+        // You can use Fire store or any other database you are using
         // For example:
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         FirebaseFirestore.getInstance()
                 .collection("breaks")
                 .document(userId)
@@ -239,10 +219,4 @@ public class MainWorkMenu extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> Log.d("Database", "Break end written to database"))
                 .addOnFailureListener(e -> Log.e("Database", "Error writing break end to database: " + e.getMessage()));
     }
-
 }
-
-
-
-
-

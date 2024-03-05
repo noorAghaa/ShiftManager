@@ -5,19 +5,20 @@ import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TimerService extends Service {
-
     private long startTimeMillis; // Variable to store the start time of the break
-
     private CountDownTimer countDownTimer;
 
     @Nullable

@@ -3,30 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Spinner for selecting month -->
     <Spinner
         android:id="@+id/monthSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
 
-    <!-- Spinner for selecting year -->
     <Spinner
         android:id="@+id/yearSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_below="@id/monthSpinner"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
 
-    <!-- RecyclerView to display breaks -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/breaksRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/yearSpinner"
         android:layout_marginTop="16dp" />
-
 </RelativeLayout>

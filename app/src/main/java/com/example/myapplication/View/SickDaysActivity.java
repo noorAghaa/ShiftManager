@@ -1,5 +1,6 @@
 package com.example.myapplication.View;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -8,16 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.Controller.SickDaysAdapter;
 import com.example.myapplication.Model.SickDay;
 import com.example.myapplication.R;
-import com.example.myapplication.Controller.SickDaysAdapter;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -30,9 +28,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class SickDaysActivity extends AppCompatActivity {
-
     private CollectionReference userSickDaysRef;
-    private RecyclerView recyclerView;
     private SickDaysAdapter adapter;
     private List<SickDay> sickDaysList;
 
@@ -43,25 +39,25 @@ public class SickDaysActivity extends AppCompatActivity {
 
         // Get current user's ID
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        assert currentUser != null;
         String userId = currentUser.getUid();
 
-        // Initialize Firestore reference
+        // Initialize Fire store reference
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         userSickDaysRef = db.collection("sick_days").document(userId).collection("entries");
 
         // Initialize RecyclerView and adapter
-        recyclerView = findViewById(R.id.recyclerView_sick_days);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView_sick_days);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         sickDaysList = new ArrayList<>();
         adapter = new SickDaysAdapter(sickDaysList);
         recyclerView.setAdapter(adapter);
 
-        // Load sick days from Firestore
+        // Load sick days from Fire store
         loadSickDays();
     }
 
-    // Method to show DatePickerDialog and save selected sick day to Firestore
-    // Method to show DatePickerDialog and save selected sick day to Firestore
+    // Method to show DatePickerDialog and save selected sick day to Fire store
     public void pickSickDate(View view) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view1, year, month, dayOfMonth) -> {
@@ -87,7 +83,7 @@ public class SickDaysActivity extends AppCompatActivity {
         // Set up the buttons
         builder.setPositiveButton("OK", (dialog, which) -> {
             String reason = input.getText().toString();
-            // Save selectedDate and reason to Firestore under the current user's sick_days node
+            // Save selectedDate and reason to Fire store under the current user's sick_days node
             SickDay sickDay = new SickDay(selectedDate, reason);
             userSickDaysRef.add(sickDay)
                     .addOnSuccessListener(documentReference -> {
@@ -102,13 +98,15 @@ public class SickDaysActivity extends AppCompatActivity {
         builder.show();
     }
 
-    // Method to retrieve sick days from Firestore and update RecyclerView
+    // Method to retrieve sick days from Fire store and update RecyclerView
+    @SuppressLint("NotifyDataSetChanged")
     private void loadSickDays() {
         // Get current user's ID
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        assert currentUser != null;
         String userId = currentUser.getUid();
 
-        // Reference to the "entries" collection in Firestore
+        // Reference to the "entries" collection in Fire store
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference entriesRef = db.collection("sick_days").document(userId).collection("entries");
 
@@ -125,7 +123,6 @@ public class SickDaysActivity extends AppCompatActivity {
                         String reason = document.getString("reason"); // Retrieve the reason from Firestore
                         sickDaysList.add(new SickDay(date, reason)); // Create a SickDay object with both date and reason
                     }
-
                     // Notify the adapter that the dataset has changed
                     adapter.notifyDataSetChanged();
                 })
@@ -133,5 +130,5 @@ public class SickDaysActivity extends AppCompatActivity {
                     // Handle errors
                     Log.e("SickDaysActivity", "Error retrieving sick days: " + e.getMessage());
                 });
-    }}
-
+    }
+}

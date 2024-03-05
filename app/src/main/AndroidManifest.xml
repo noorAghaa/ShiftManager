@@ -24,63 +24,79 @@
         <activity
             android:name=".View.AddPreApprovedEmployeeActivity"
             android:exported="false" />
+
         <activity
             android:name=".View.ExtraHoursActivity"
             android:exported="false" />
+
         <activity
             android:name=".View.CalculateActivity"
             android:exported="false" />
+
         <activity
             android:name=".View.SalaryActivity"
             android:exported="false" />
+
         <activity
             android:name=".View.SickDaysActivity"
             android:exported="false" />
+
         <activity
             android:name=".View.BreaksActivity"
             android:exported="false" />
+
         <activity
             android:name=".View.MainWorkMenu"
             android:exported="false" />
+
         <activity
             android:name=".View.MainCurrWork"
             android:exported="false" />
+
         <activity
             android:name=".View.MainPreWork"
             android:exported="false" />
+
         <activity
             android:name=".View.ManagerActivity"
             android:exported="false" />
+
         <activity
             android:name=".View.SignupActivity"
             android:exported="false" />
+
         <activity
             android:name=".View.LoginActivity"
             android:exported="true" />
+
         <activity
             android:name=".View.ForgotPasswordActivity"
             android:exported="false" />
+
         <activity
             android:name=".View.EmployeeActivity"
             android:exported="false" />
+
         <activity
             android:name=".View.MainShifts"
             android:exported="false" />
+
         <activity
             android:name=".View.ViewEmployeesActivity"
             android:exported="false" />
+
         <activity
             android:name=".View.SetCompanyDetails"
             android:exported="false" />
+
         <activity
             android:name=".View.MainActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

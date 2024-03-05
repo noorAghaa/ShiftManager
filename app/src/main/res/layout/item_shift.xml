@@ -4,14 +4,14 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp">
-<!-- this is lior's made shift item-->
+
     <TextView
         android:id="@+id/shiftDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
+        android:layout_marginBottom="8dp"
         android:textSize="16sp"
-        android:layout_marginBottom="8dp"/>
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,23 +22,23 @@
             android:id="@+id/startTimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:layout_marginEnd="8dp"
             android:textSize="14sp"
-            android:layout_marginEnd="8dp"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/endTimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/durationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="italic"
+        android:layout_marginTop="8dp"
         android:textSize="14sp"
-        android:layout_marginTop="8dp"/>
+        android:textStyle="italic" />
 </LinearLayout>

@@ -10,16 +10,13 @@
         android:id="@+id/button_pick_sick_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pick Sick Date"
-        android:onClick="pickSickDate" />
+        android:onClick="pickSickDate"
+        android:text="@string/pick_sick_date" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_sick_days"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/button_pick_sick_date"
-        android:layout_marginTop="16dp"/>
-
-
-
+        android:layout_marginTop="16dp" />
 </RelativeLayout>

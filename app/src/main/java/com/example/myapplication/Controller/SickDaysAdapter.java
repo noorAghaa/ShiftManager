@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,7 +14,6 @@ import com.example.myapplication.R;
 import java.util.List;
 
 public class SickDaysAdapter extends RecyclerView.Adapter<SickDaysAdapter.ViewHolder> {
-
     private List<SickDay> sickDaysList;
 
     // Constructor to initialize the dataset

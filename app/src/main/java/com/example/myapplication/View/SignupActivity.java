@@ -1,7 +1,6 @@
 package com.example.myapplication.View;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +11,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.myapplication.Controller.AuthCallBack;
 import com.example.myapplication.Model.Database;
 import com.example.myapplication.Model.User;
@@ -20,17 +21,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
 public class SignupActivity extends AppCompatActivity {
-
-
     EditText firstname, lastname, signupEmail, signupPassword, phoneNumber;
     EditText Id_Number;
     TextView txtV_button_back;
     Button signupButton;
     ImageButton backButton;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     Switch accountTypeSwitch;
-
     private Database database;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +38,7 @@ public class SignupActivity extends AppCompatActivity {
         init();
     }
 
-    private void findV(){
+    private void findV() {
         firstname = findViewById(R.id.firstName);
         signupEmail = findViewById(R.id.signup_email);
         lastname = findViewById(R.id.lastName);
@@ -53,8 +51,7 @@ public class SignupActivity extends AppCompatActivity {
         accountTypeSwitch = findViewById(R.id.switchAccountType);
     }
 
-
-    private void init(){
+    private void init() {
         database = new Database();
         database.setAuthCallBack(new AuthCallBack() {
             @Override
@@ -64,12 +61,9 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             public void onCreateAccountComplete(boolean status, String err) {
-//                signup_PB_loading.setVisibility(View.INVISIBLE);
-                if(status){
+                if (status) {
                     Toast.makeText(SignupActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
-//                    database.logout();
-//                    finish();
-                }else{
+                } else {
                     Toast.makeText(SignupActivity.this, err, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -133,9 +127,6 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         txtV_button_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,7 +147,6 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-
     private boolean checkInput() {
         User customer = new User();
         customer.setEmail(signupEmail.getText().toString());
@@ -165,28 +155,23 @@ public class SignupActivity extends AppCompatActivity {
         customer.setPhoneNumber(phoneNumber.getText().toString());
         customer.setPassword(signupPassword.getText().toString());
 
-
         String password = customer.getPassword();
         String confirmPassword = customer.getPassword();
 
-        if(!customer.isValid()) {
+        if (!customer.isValid()) {
             Toast.makeText(SignupActivity.this, "Please fill all user info!", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-
-
-        if(password.length() < 8){
+        if (password.length() < 8) {
             Toast.makeText(SignupActivity.this, "Password must be at least 8 characters", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        if(!password.equals(confirmPassword)){
+        if (!password.equals(confirmPassword)) {
             Toast.makeText(SignupActivity.this, "mismatch between password and confirm password", Toast.LENGTH_SHORT).show();
             return false;
         }
-
-
         return true;
     }
 }

@@ -1,9 +1,5 @@
 package com.example.myapplication.View;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,14 +9,16 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
-
-    // Declaration
     Button btnReset, btnBack;
     EditText edtEmail;
     ProgressBar progressBar;
@@ -59,7 +57,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                Intent intent = new Intent(ForgotPasswordActivity.this,MainActivity.class);
+                Intent intent = new Intent(ForgotPasswordActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }

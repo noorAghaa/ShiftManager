@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,9 +13,7 @@ import com.example.myapplication.R;
 import java.util.List;
 
 public class BreaksAdapter extends RecyclerView.Adapter<BreaksAdapter.ViewHolder> {
-
     private List<String> breakDatesList;
-
     public BreaksAdapter(List<String> breakDatesList) {
         this.breakDatesList = breakDatesList;
     }
@@ -38,7 +37,6 @@ public class BreaksAdapter extends RecyclerView.Adapter<BreaksAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
         private TextView breakTextView;
 
         public ViewHolder(@NonNull View itemView) {

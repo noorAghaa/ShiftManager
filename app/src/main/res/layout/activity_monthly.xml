@@ -7,17 +7,17 @@
         android:id="@+id/monthSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
 
     <Spinner
         android:id="@+id/yearSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_below="@id/monthSpinner"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
 
     <Button
         android:id="@+id/calculateSalaryBtn"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/yearSpinner"
         android:layout_centerHorizontal="true"
-        android:text="Calculate Salary" />
+        android:text="@string/calculate_salary" />
 
     <TextView
         android:id="@+id/monthlySalaryTextView"
@@ -34,10 +34,9 @@
         android:layout_below="@id/calculateSalaryBtn"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="Monthly Salary"
+        android:text="@string/monthly_salary"
         android:textAppearance="?android:textAppearanceMedium" />
 
-    <!-- New TextViews for displaying total hours worked and detailed description -->
     <TextView
         android:id="@+id/totalHoursWorkedTextView"
         android:layout_width="wrap_content"
@@ -45,7 +44,7 @@
         android:layout_below="@id/monthlySalaryTextView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="Total Hours Worked:"
+        android:text="@string/total_hours_worked"
         android:textAppearance="?android:textAppearanceMedium" />
 
     <TextView
@@ -55,8 +54,7 @@
         android:layout_below="@id/totalHoursWorkedTextView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="hourly salary:"
+        android:text="@string/hourly_salary"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
-
 </RelativeLayout>

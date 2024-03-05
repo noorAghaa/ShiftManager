@@ -1,12 +1,12 @@
 package com.example.myapplication.View;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.Model.Database;
 import com.example.myapplication.Model.Shift;
@@ -14,18 +14,16 @@ import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.List;
 import java.util.Locale;
-import com.example.myapplication.Model.Database;
+import java.util.Objects;
 
 
 public class SalaryActivity extends AppCompatActivity {
-    private Database database = new Database();
     private static final double EXTRA_HOURS_MULTIPLIER = 1.5; // 150% increase for extra hours
     private static final double REGULAR_WORKING_HOURS_PER_DAY = 8; // Assuming 8 hours per day is regular working hours
+    private Database database = new Database();
     private FirebaseFirestore db;
     private CollectionReference shiftsRef;
     private TextView salaryTextView;
@@ -35,18 +33,19 @@ public class SalaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_work_menu);
 
-        // Initialize Firestore and reference to shifts collection
+        // Initialize Fire store and reference to shifts collection
         db = FirebaseFirestore.getInstance();
         shiftsRef = db.collection("shifts");
 
         salaryTextView = findViewById(R.id.salaryTextView);
 
-        // Read shifts from Firestore and calculate salary
+        // Read shifts from Fire store and calculate salary
         calculateSalary();
     }
+
     private void calculateSalary() {
         // Get current user's ID
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         // Declare totalHoursWorked and extraHoursWorked as final
         // Declare total hours worked, regular hours, and extra hours as final
@@ -54,7 +53,7 @@ public class SalaryActivity extends AppCompatActivity {
         final double[] regularHours = {0};
         final double[] extraHours = {0};
 
-        // Query Firestore to retrieve shifts for the current user
+        // Query Fire store to retrieve shifts for the current user
         database.fetchShifts(userId, new Database.ShiftDataCallback() {
             @Override
             public void onShiftDataFetched(List<Shift> shifts) {
@@ -92,7 +91,7 @@ public class SalaryActivity extends AppCompatActivity {
                     }
                 }
 
-                // Fetch hourly salary from Firestore
+                // Fetch hourly salary from Fire store
                 database.fetchSalary(userId, new Database.SalaryFetchCallback() {
                     @Override
                     public void onSalaryFetch(String hourlySalary) {
@@ -101,7 +100,7 @@ public class SalaryActivity extends AppCompatActivity {
 
                         // Calculate salary for extra hours with extra multiplier
                         double extraSalary = extraHours[0] * Double.parseDouble(hourlySalary) * EXTRA_HOURS_MULTIPLIER;
-                        double totalSalary= extraSalary+regularSalary;
+                        double totalSalary = extraSalary + regularSalary;
 
                         // Pass the salary back to the calling activity
                         Intent resultIntent = new Intent();
@@ -129,11 +128,6 @@ public class SalaryActivity extends AppCompatActivity {
         });
     }
 
-
-
-
-
-
     // Helper method to calculate hours worked between start and end time
     private double calculateHoursWorked(String startTime, String endTime) {
         // Split start time and end time strings to extract hours and minutes
@@ -159,9 +153,6 @@ public class SalaryActivity extends AppCompatActivity {
         // Calculate difference in minutes
         int totalMinutes = totalEndMinutes - totalStartMinutes;
 
-        // Convert minutes to hours (1 hour = 60 minutes)
-        double hoursWorked = totalMinutes / 60.0;
-
-        return hoursWorked;
+        return totalMinutes / 60.0;
     }
 }

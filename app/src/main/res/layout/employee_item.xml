@@ -9,38 +9,36 @@
         android:id="@+id/employeeNameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:text="@string/employee_name"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/viewSalaryButton"
-        android:text="Employee Name" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/viewShiftsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Shifts"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/shifts"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/viewSalaryButton"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/viewSalaryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Salary"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/salary"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/removeEmployeeButton"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/removeEmployeeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Remove"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/remove"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,43 +10,24 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Work Menu"
-        android:textSize="50sp"
 
+        android:textSize="50sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.1"
-        android:layout_marginTop="16dp"
-        />
-
-
-    <!-- Buttons on the left side -->
-
-    <!-- Buttons on the right side -->
-
-    <!--    <Button-->
-<!--        android:id="@+id/salaryBtn"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:text="Salary"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.092"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.653" />-->
-
+        tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/exhBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
-        android:text="extra hours"
+        android:text="@string/extra_hours"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -56,7 +37,7 @@
         android:id="@+id/breakBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Breaks"
+        android:text="@string/breaks"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.529"
@@ -68,25 +49,22 @@
         android:id="@+id/timerTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text=""
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/breakBtn"
-        app:layout_constraintTop_toTopOf="@+id/breakBtn"
         app:layout_constraintBottom_toBottomOf="@+id/breakBtn"
-        android:layout_marginStart="8dp"
-        />
-
+        app:layout_constraintStart_toEndOf="@+id/breakBtn"
+        app:layout_constraintTop_toTopOf="@+id/breakBtn" />
 
     <Button
         android:id="@+id/sidBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="36dp"
-        android:text="sick days"
+        android:text="@string/sick_days"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <TextView
         android:id="@+id/salaryTextView"
@@ -97,7 +75,7 @@
         android:paddingTop="8dp"
         android:paddingEnd="16dp"
         android:paddingBottom="8dp"
-        android:text="Salary: $0"
+        android:text="@string/salary_0"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/hourlySalaryTextView"
@@ -111,7 +89,7 @@
         android:id="@+id/hourlySalaryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Current hourly salary: $0"
+        android:text="@string/current_hourly_salary_0"
         android:textColor="@android:color/black"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -125,13 +103,11 @@
         android:id="@+id/monthlyCalcBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Monthly calc"
+        android:text="@string/monthly_calc"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.871"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.653" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,10 +1,8 @@
 package com.example.myapplication.View;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,16 +25,10 @@ import java.util.List;
 import java.util.Map;
 
 public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.EmployeeViewHolder> {
-
     private Context context;
     private List<User> employeesList;
     private OnEmployeeClickListener listener;
     private Map<String, String> updatedSalaries = new HashMap<>();
-
-
-    public interface OnEmployeeClickListener {
-        void onEmployeeClicked(String userId);
-    }
 
     public EmployeesAdapter(Context context, List<User> employeesList, OnEmployeeClickListener listener) {
         this.context = context;
@@ -81,19 +73,15 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.Empl
                 });
             });
         }
-
-
-
         holder.removeEmployeeButton.setOnClickListener(v -> {
             removeEmployee(employee.getMyId(), position);
         });
 
         holder.viewShiftsButton.setOnClickListener(v -> {
-            if(listener != null) {
+            if (listener != null) {
                 listener.onEmployeeClicked(employee.getMyId());
             }
         });
-
     }
 
     private void showUpdateSalaryDialog(User employee, String currentSalary) {
@@ -127,6 +115,7 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.Empl
                 .setNegativeButton("Cancel", null)
                 .show();
     }
+
     @Override
     public int getItemCount() {
         return employeesList.size();
@@ -144,10 +133,15 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.Empl
                 .addOnFailureListener(e -> Toast.makeText(context, "Error removing employee.", Toast.LENGTH_SHORT).show());
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void updateData(List<User> newEmployees) {
         employeesList.clear();
         employeesList.addAll(newEmployees);
         notifyDataSetChanged();
+    }
+
+    public interface OnEmployeeClickListener {
+        void onEmployeeClicked(String userId);
     }
 
     static class EmployeeViewHolder extends RecyclerView.ViewHolder {

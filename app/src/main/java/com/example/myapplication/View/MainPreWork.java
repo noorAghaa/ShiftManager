@@ -1,17 +1,17 @@
 package com.example.myapplication.View;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.myapplication.Controller.UserCallBack;
 import com.example.myapplication.Model.Database;
 import com.example.myapplication.Model.User;
 import com.example.myapplication.R;
-import com.example.myapplication.Controller.UserCallBack;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,6 +20,7 @@ public class MainPreWork extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private TextView userInfoTextView;
     private Database database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +60,6 @@ public class MainPreWork extends AppCompatActivity {
             }
         });
 
-
-
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +73,7 @@ public class MainPreWork extends AppCompatActivity {
             }
         });
     }
+
     private void fetchAndDisplayUserData() {
         FirebaseUser currentUser = database.getCurrentUser();
         if (currentUser != null) {
@@ -93,9 +93,7 @@ public class MainPreWork extends AppCompatActivity {
 
                 @Override
                 public void onUpdateComplete(Task<Void> task) {
-
                 }
-
             });
         }
     }

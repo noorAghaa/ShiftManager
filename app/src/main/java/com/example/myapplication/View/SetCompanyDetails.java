@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,9 +14,10 @@ import com.example.myapplication.Model.Database;
 import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
 public class SetCompanyDetails extends AppCompatActivity {
     private EditText companyName, companyAddress, companyPhoneNumber, companyWebsite;
-    private Button addButton;
     private Database database;
 
     @Override
@@ -31,7 +29,7 @@ public class SetCompanyDetails extends AppCompatActivity {
         companyAddress = findViewById(R.id.companyAddressEditText);
         companyPhoneNumber = findViewById(R.id.companyPhoneNumberEditText);
         companyWebsite = findViewById(R.id.companyWebsiteEditText);
-        addButton = findViewById(R.id.addButton);
+        Button addButton = findViewById(R.id.addButton);
 
         database = new Database();
 
@@ -43,7 +41,7 @@ public class SetCompanyDetails extends AppCompatActivity {
                 String phone = companyPhoneNumber.getText().toString().trim();
                 String website = companyWebsite.getText().toString().trim();
 
-                String managerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                String managerId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
                 database.addCompanyDetails(name, address, phone, website, managerId, new Database.SetCompanyDetailsCallback() {
                     @Override
                     public void onSuccess() {

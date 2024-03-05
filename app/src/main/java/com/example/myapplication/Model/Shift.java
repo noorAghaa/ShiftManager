@@ -3,9 +3,8 @@ package com.example.myapplication.Model;
 import com.example.myapplication.Controller.DateUtil;
 
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public class Shift {
@@ -28,15 +27,6 @@ public class Shift {
         this.userId = userId; // Set user ID
     }
 
-    public String getFormattedDay() {
-        try {
-            String[] parts = DateUtil.formatDate(start_date).split(" ");
-            return parts[2];// Extract day
-        } catch (Exception e) {
-            return "Date format error";
-        }
-    }
-
     public static Date parseTimeString(String timeString) {
         if (timeString == null || timeString.isEmpty()) {
             System.err.println("Time string is null or empty");
@@ -49,6 +39,15 @@ public class Shift {
         } catch (ParseException e) {
             e.printStackTrace();
             return null; // Or handle error appropriately
+        }
+    }
+
+    public String getFormattedDay() {
+        try {
+            String[] parts = DateUtil.formatDate(start_date).split(" ");
+            return parts[2];// Extract day
+        } catch (Exception e) {
+            return "Date format error";
         }
     }
 
@@ -78,12 +77,25 @@ public class Shift {
     }
 
     // Getters (and setters if necessary)
-    public String getDay() { return day; }
-    public Date getStart_date() { return start_date; }
-    public String getDuration() { return duration; }
-    public String getUserId() { return userId; } // Getter for userId
+    public String getDay() {
+        return day;
+    }
 
-    public Date getEnd_date() { return  end_date; }
+    public Date getStart_date() {
+        return start_date;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public String getUserId() {
+        return userId;
+    } // Getter for userId
+
+    public Date getEnd_date() {
+        return end_date;
+    }
 
     // Method to calculate the duration of the shift in hours
     public double calculateDurationInHours() {
@@ -92,6 +104,8 @@ public class Shift {
         Date endTime = parseTimeString(duration.split(" - ")[1]);
 
         // Calculate duration in milliseconds
+        assert endTime != null;
+        assert startTime != null;
         long durationInMillis = endTime.getTime() - startTime.getTime();
 
 

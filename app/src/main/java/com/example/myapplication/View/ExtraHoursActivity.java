@@ -1,5 +1,6 @@
 package com.example.myapplication.View;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,13 +21,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 public class ExtraHoursActivity extends AppCompatActivity {
-
     private RecyclerView extraHoursRecyclerView;
     private ExtraHoursAdapter extraHoursAdapter;
     private List<Shift> extraHoursShifts;
-
     private Database database; // Declare Database instance
     private Spinner monthSpinner;
     private Spinner yearSpinner;
@@ -102,10 +102,11 @@ public class ExtraHoursActivity extends AppCompatActivity {
     private void fetchShiftsWithExtraHours() {
         // Clear the existing list of shifts before fetching new shifts
         extraHoursShifts.clear();
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         // Call the method to fetch all shifts for the current user
         database.fetchShifts(userId, new Database.ShiftDataCallback() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onShiftDataFetched(List<Shift> shifts) {
                 // Iterate through all shifts and filter out those with extra hours

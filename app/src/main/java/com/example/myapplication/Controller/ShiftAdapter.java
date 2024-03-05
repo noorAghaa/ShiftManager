@@ -28,6 +28,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<ShiftAdapter.ViewHolder> 
         return new ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Shift shift = shiftList.get(position);

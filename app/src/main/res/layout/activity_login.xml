@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".View.LoginActivity">
+    tools:context="com.example.myapplication.View.LoginActivity">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -74,7 +74,7 @@
                 android:id="@+id/login_button"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:backgroundTint="@color/purple"
                 android:onClick="onClick"
                 android:text="@string/login1"
@@ -83,12 +83,11 @@
 
             <TextView
                 android:id="@+id/signupRedirectButton"
-                android:layout_width="204dp"
-                android:layout_height="52dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:onClick="onClick"
-                android:padding="8dp"
                 android:text="@string/not_yet_registered_"
                 android:textColor="@color/purple"
                 android:textSize="18sp" />

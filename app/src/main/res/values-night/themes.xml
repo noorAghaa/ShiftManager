@@ -1,4 +1,6 @@
 <resources>
 
-    <style name="Base.Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar" />
+    <style name="Base.Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar" >
+        <item name="fontFamily">@font/artico</item>
+    </style>
 </resources>

@@ -3,26 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:paddingHorizontal="20dp"
+    android:padding="10dp"
+    android:layout_margin="5dp"
+    android:background="@drawable/purple_border_1"
+   >
 
+    <ImageView
+        android:id="@+id/removeEmployeeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/remove"
+        android:padding="10dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <TextView
         android:id="@+id/employeeNameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/employee_name"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/viewSalaryButton"
+        app:layout_constraintEnd_toStartOf="@+id/viewShiftsButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <Button
         android:id="@+id/viewShiftsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/shifts"
+        android:layout_marginEnd="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/viewSalaryButton"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/removeEmployeeButton" />
 
     <Button
         android:id="@+id/viewSalaryButton"
@@ -30,15 +47,8 @@
         android:layout_height="wrap_content"
         android:text="@string/salary"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/removeEmployeeButton"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/removeEmployeeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/remove"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/removeEmployeeButton" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

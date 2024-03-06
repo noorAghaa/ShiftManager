@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -146,7 +147,8 @@ public class EmployeesAdapter extends RecyclerView.Adapter<EmployeesAdapter.Empl
 
     static class EmployeeViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
-        Button viewSalaryButton, removeEmployeeButton, viewShiftsButton;
+        Button viewSalaryButton, viewShiftsButton;
+        ImageView removeEmployeeButton;
 
         public EmployeeViewHolder(@NonNull View itemView) {
             super(itemView);

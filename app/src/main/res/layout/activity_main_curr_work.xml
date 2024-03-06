@@ -4,44 +4,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".View.MainCurrWork">
+    tools:context="com.example.myapplication.View.MainCurrWork">
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/starting_button"
-        android:layout_width="248dp"
-        android:layout_height="164dp"
+        android:layout_width="346dp"
+        android:layout_height="77dp"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="150dp"
+        android:background="@drawable/purple_border"
         android:text="Starting Time:"
+        android:textColor="@color/purple"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.555" />
-
-    <Button
-        android:id="@+id/end_button"
-        android:layout_width="383dp"
-        android:layout_height="121dp"
-        android:text="End shift"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.428"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.973" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/ending_button"
-        android:layout_width="248dp"
-        android:layout_height="164dp"
+        android:layout_width="350dp"
+        android:layout_height="73dp"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/purple_border"
         android:text="Ending Time:"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:cornerRadius="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.24" />
+        app:layout_constraintTop_toBottomOf="@id/starting_button" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-30dp"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="20dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/purple_border"
+            android:padding="30dp">
+
+            <Button
+                android:id="@+id/end_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:text="End shift"
+                android:textSize="48sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
